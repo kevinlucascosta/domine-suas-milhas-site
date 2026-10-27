@@ -1,0 +1,115 @@
+export type LessonQuestionTranslation = {
+  prompt: string;
+  options: string[];
+  explanation: string;
+};
+
+type QuestionSet = Record<string, LessonQuestionTranslation>;
+
+const fallbackExplanation = {
+  en: "Review the supporting material to understand the correct answer.",
+  es: "Consulta el material de apoyo para comprender la respuesta correcta.",
+  ja: "正しい答えを理解するには、補足資料を確認してください。",
+  zh: "请查看辅助材料以了解正确答案。",
+};
+
+export const lesson01QuestionTranslations: Record<
+  "en" | "es" | "ja" | "zh",
+  QuestionSet
+> = {
+  en: {
+    "review-milhas-01": { prompt: "According to the material, what are miles?", options: ["The currency of loyalty programs", "A fee charged by the airline", "A type of credit card", "A fixed discount on flights"], explanation: "Miles are the currency used in airline loyalty programs." },
+    "review-milhas-02": { prompt: "How does the material define points?", options: ["Rewards from banks or partner websites", "Expired airline miles", "Boarding fees", "Exclusive hotel discounts"], explanation: "Points are rewards offered by banks or partner websites." },
+    "review-milhas-03": { prompt: "A thousand-mile unit corresponds to how many miles?", options: ["100 miles", "500 miles", "1,000 miles", "10,000 miles"], explanation: "One thousand-mile unit equals 1,000 miles." },
+    "review-milhas-04": { prompt: "15,000 miles equal how many thousand-mile units?", options: ["1.5 units", "15 units", "150 units", "1,500 units"], explanation: "15,000 divided by 1,000 equals 15 units." },
+    "review-milhas-05": { prompt: "What range is cited for a LATAM thousand-mile unit?", options: ["R$13 to R$15", "R$14 to R$18", "R$22 to R$25", "Up to R$55"], explanation: "The material cites R$22 to R$25 for a LATAM thousand-mile unit." },
+    "review-programas-01": { prompt: "Who creates the loyalty programs presented?", options: ["Banks", "Airlines", "Travel agencies", "Hotels"], explanation: "The programs are created by airlines to reward customers." },
+    "review-programas-02": { prompt: "According to the PDF, what does it cost to register for the programs?", options: ["It is free", "It costs R$10", "It requires a monthly subscription", "It depends on the credit card"], explanation: "The material says registration is free." },
+    "review-programas-03": { prompt: "Which GOL loyalty program is shown in the material?", options: ["TudoAzul", "LATAM Pass", "Smiles", "Iberia Plus"], explanation: "Smiles is the loyalty program associated with GOL." },
+    "review-programas-04": { prompt: "Which program is associated with Azul airline?", options: ["TudoAzul", "Smiles", "LATAM Pass", "Qatar Airways"], explanation: "TudoAzul is Azul's loyalty program." },
+    "review-programas-05": { prompt: "Which program is associated with LATAM?", options: ["Avios", "LATAM Pass", "Smiles", "TudoAzul"], explanation: "LATAM Pass is LATAM's loyalty program." },
+    "challenge-milhas-01": { prompt: "Which option correctly distinguishes points from miles?", options: ["Points are rewards from banks/partners; miles are the loyalty-program currency", "Miles are bank rewards; points are airline currency", "They are always exactly the same", "Points only exist after international travel"], explanation: fallbackExplanation.en },
+    "challenge-milhas-02": { prompt: "A person has 45,000 miles. How many thousand-mile units do they have?", options: ["4.5", "45", "450", "4,500"], explanation: "45,000 divided by 1,000 equals 45 units." },
+    "challenge-milhas-03": { prompt: "Which group is cited with a thousand-mile unit that can reach R$55?", options: ["GOL, Azul and LATAM", "Iberia, British and Qatar", "Smiles, TudoAzul and LATAM Pass", "GOL, TAP and Azul"], explanation: fallbackExplanation.en },
+    "challenge-milhas-04": { prompt: "What logic is used to calculate the value of a thousand-mile unit?", options: ["Amount paid divided by the number of miles", "Number of miles multiplied by 100", "Amount paid minus boarding fee", "Number of points divided by the card"], explanation: fallbackExplanation.en },
+    "challenge-milhas-05": { prompt: "What price range is indicated for a GOL thousand-mile unit?", options: ["R$13 to R$15", "R$14 to R$18", "R$22 to R$25", "Up to R$35"], explanation: fallbackExplanation.en },
+    "challenge-programas-01": { prompt: "Which association is correct according to the material?", options: ["Smiles - GOL", "Smiles - Azul", "TudoAzul - LATAM", "LATAM Pass - Iberia"], explanation: fallbackExplanation.en },
+    "challenge-programas-02": { prompt: "Which pair brings together programs shown in the second PDF?", options: ["TudoAzul and LATAM Pass", "Livelo and Esfera", "ConnectMiles and AAdvantage", "Miles&Go and TAP Miles"], explanation: fallbackExplanation.en },
+    "challenge-programas-03": { prompt: "Besides Smiles, TudoAzul and LATAM Pass, which program is mentioned?", options: ["Iberia Plus", "Esfera", "Livelo", "C6 Átomos"], explanation: fallbackExplanation.en },
+    "challenge-programas-04": { prompt: "What action does the PDF recommend taking now regarding the programs?", options: ["Register for free", "Buy miles immediately", "Join every club", "Cancel the card"], explanation: fallbackExplanation.en },
+    "challenge-programas-05": { prompt: "Which airline is also identified by its program in the material?", options: ["Qatar Airways", "Lufthansa", "Emirates", "Air France"], explanation: fallbackExplanation.en },
+  },
+  es: {
+    "review-milhas-01": { prompt: "Según el material, ¿qué son las millas?", options: ["La moneda de los programas de fidelidad", "Una tarifa cobrada por la aerolínea", "Un tipo de tarjeta de crédito", "Un descuento fijo en vuelos"], explanation: "Las millas son la moneda utilizada en los programas de fidelidad." },
+    "review-milhas-02": { prompt: "¿Cómo define el material los puntos?", options: ["Recompensas de bancos o sitios asociados", "Millas aéreas vencidas", "Tasas de embarque", "Descuentos exclusivos de hoteles"], explanation: "Los puntos son recompensas ofrecidas por bancos o socios." },
+    "review-milhas-03": { prompt: "¿A cuántas millas equivale un millar?", options: ["100 millas", "500 millas", "1.000 millas", "10.000 millas"], explanation: "Un millar equivale a 1.000 millas." },
+    "review-milhas-04": { prompt: "15.000 millas equivalen a cuántos millares?", options: ["1,5 millares", "15 millares", "150 millares", "1.500 millares"], explanation: "15.000 dividido entre 1.000 equivale a 15 millares." },
+    "review-milhas-05": { prompt: "¿Qué rango se cita para el millar de LATAM?", options: ["R$13 a R$15", "R$14 a R$18", "R$22 a R$25", "Hasta R$55"], explanation: "El material cita R$22 a R$25 para el millar de LATAM." },
+    "review-programas-01": { prompt: "¿Quién crea los programas de fidelidad presentados?", options: ["Bancos", "Aerolíneas", "Agencias de viajes", "Hoteles"], explanation: "Los programas son creados por las aerolíneas." },
+    "review-programas-02": { prompt: "Según el PDF, ¿cuál es el costo de registrarse?", options: ["Es gratuito", "Cuesta R$10", "Exige suscripción mensual", "Depende de la tarjeta"], explanation: "El material informa que el registro es gratuito." },
+    "review-programas-03": { prompt: "¿Qué programa de fidelidad de GOL aparece en el material?", options: ["TudoAzul", "LATAM Pass", "Smiles", "Iberia Plus"], explanation: "Smiles es el programa asociado con GOL." },
+    "review-programas-04": { prompt: "¿Qué programa se asocia con Azul?", options: ["TudoAzul", "Smiles", "LATAM Pass", "Qatar Airways"], explanation: "TudoAzul es el programa de Azul." },
+    "review-programas-05": { prompt: "¿Qué programa se asocia con LATAM?", options: ["Avios", "LATAM Pass", "Smiles", "TudoAzul"], explanation: "LATAM Pass es el programa de LATAM." },
+    "challenge-milhas-01": { prompt: "¿Qué alternativa diferencia correctamente puntos y millas?", options: ["Los puntos son recompensas de bancos/socios; las millas son la moneda del programa", "Las millas son recompensas de bancos; los puntos son moneda aérea", "Siempre son exactamente lo mismo", "Los puntos solo existen después de un viaje internacional"], explanation: fallbackExplanation.es },
+    "challenge-milhas-02": { prompt: "Una persona tiene 45.000 millas. ¿Cuántos millares tiene?", options: ["4,5", "45", "450", "4.500"], explanation: "45.000 dividido entre 1.000 da 45 millares." },
+    "challenge-milhas-03": { prompt: "¿Qué grupo se cita con millar que puede llegar a R$55?", options: ["GOL, Azul y LATAM", "Iberia, British y Qatar", "Smiles, TudoAzul y LATAM Pass", "GOL, TAP y Azul"], explanation: fallbackExplanation.es },
+    "challenge-milhas-04": { prompt: "¿Qué lógica se muestra para calcular el valor del millar?", options: ["Valor pagado dividido por cantidad de millas", "Cantidad de millas multiplicada por 100", "Valor pagado menos tasa de embarque", "Cantidad de puntos dividida por la tarjeta"], explanation: fallbackExplanation.es },
+    "challenge-milhas-05": { prompt: "¿Qué rango de precio se indica para el millar de GOL?", options: ["R$13 a R$15", "R$14 a R$18", "R$22 a R$25", "Hasta R$35"], explanation: fallbackExplanation.es },
+    "challenge-programas-01": { prompt: "¿Qué asociación es correcta según el material?", options: ["Smiles - GOL", "Smiles - Azul", "TudoAzul - LATAM", "LATAM Pass - Iberia"], explanation: fallbackExplanation.es },
+    "challenge-programas-02": { prompt: "¿Qué pareja reúne programas del segundo PDF?", options: ["TudoAzul y LATAM Pass", "Livelo y Esfera", "ConnectMiles y AAdvantage", "Miles&Go y TAP Miles"], explanation: fallbackExplanation.es },
+    "challenge-programas-03": { prompt: "Además de Smiles, TudoAzul y LATAM Pass, ¿qué programa se cita?", options: ["Iberia Plus", "Esfera", "Livelo", "C6 Átomos"], explanation: fallbackExplanation.es },
+    "challenge-programas-04": { prompt: "¿Qué acción recomienda el PDF respecto a los programas?", options: ["Registrarse gratis", "Comprar millas inmediatamente", "Suscribirse a todos los clubes", "Cancelar la tarjeta"], explanation: fallbackExplanation.es },
+    "challenge-programas-05": { prompt: "¿Qué aerolínea también aparece identificada por su programa?", options: ["Qatar Airways", "Lufthansa", "Emirates", "Air France"], explanation: fallbackExplanation.es },
+  },
+  ja: {
+    "review-milhas-01": { prompt: "資料によると、マイルとは何ですか？", options: ["ロイヤルティプログラムの通貨", "航空会社が請求する手数料", "クレジットカードの種類", "航空券の固定割引"], explanation: "マイルは航空会社のロイヤルティプログラムで使われる通貨です。" },
+    "review-milhas-02": { prompt: "資料ではポイントをどのように定義していますか？", options: ["銀行や提携サイトからの特典", "失効した航空マイル", "搭乗手数料", "ホテル限定割引"], explanation: "ポイントは銀行や提携先から提供される特典です。" },
+    "review-milhas-03": { prompt: "1ミルヘイロは何マイルですか？", options: ["100マイル", "500マイル", "1,000マイル", "10,000マイル"], explanation: "1ミルヘイロは1,000マイルです。" },
+    "review-milhas-04": { prompt: "15,000マイルは何ミルヘイロですか？", options: ["1.5", "15", "150", "1,500"], explanation: "15,000を1,000で割ると15です。" },
+    "review-milhas-05": { prompt: "LATAMの1ミルヘイロの価格帯は？", options: ["R$13〜R$15", "R$14〜R$18", "R$22〜R$25", "最大R$55"], explanation: "資料ではLATAMはR$22〜R$25です。" },
+    "review-programas-01": { prompt: "紹介されているロイヤルティプログラムを作るのは誰ですか？", options: ["銀行", "航空会社", "旅行代理店", "ホテル"], explanation: "これらのプログラムは航空会社が作っています。" },
+    "review-programas-02": { prompt: "PDFによると、プログラムへの登録費用はいくらですか？", options: ["無料", "R$10", "月額制", "カードによる"], explanation: "資料では登録は無料です。" },
+    "review-programas-03": { prompt: "資料にあるGOLのプログラムはどれですか？", options: ["TudoAzul", "LATAM Pass", "Smiles", "Iberia Plus"], explanation: "SmilesはGOLのプログラムです。" },
+    "review-programas-04": { prompt: "Azul航空に関連するプログラムは？", options: ["TudoAzul", "Smiles", "LATAM Pass", "Qatar Airways"], explanation: "TudoAzulはAzulのプログラムです。" },
+    "review-programas-05": { prompt: "LATAMに関連するプログラムは？", options: ["Avios", "LATAM Pass", "Smiles", "TudoAzul"], explanation: "LATAM PassはLATAMのプログラムです。" },
+    "challenge-milhas-01": { prompt: "ポイントとマイルを正しく区別しているのはどれですか？", options: ["ポイントは銀行・提携先の特典、マイルはプログラムの通貨", "マイルは銀行の特典、ポイントは航空会社の通貨", "常に同じもの", "ポイントは国際旅行後にのみ存在する"], explanation: fallbackExplanation.ja },
+    "challenge-milhas-02": { prompt: "45,000マイルは何ミルヘイロですか？", options: ["4.5", "45", "450", "4,500"], explanation: "45,000を1,000で割ると45です。" },
+    "challenge-milhas-03": { prompt: "1ミルヘイロがR$55までになるグループは？", options: ["GOL、Azul、LATAM", "Iberia、British、Qatar", "Smiles、TudoAzul、LATAM Pass", "GOL、TAP、Azul"], explanation: fallbackExplanation.ja },
+    "challenge-milhas-04": { prompt: "1ミルヘイロの価値を計算する考え方は？", options: ["支払額÷マイル数", "マイル数×100", "支払額−搭乗料", "ポイント数÷カード"], explanation: fallbackExplanation.ja },
+    "challenge-milhas-05": { prompt: "GOLの1ミルヘイロの価格帯は？", options: ["R$13〜R$15", "R$14〜R$18", "R$22〜R$25", "最大R$35"], explanation: fallbackExplanation.ja },
+    "challenge-programas-01": { prompt: "資料に沿った正しい組み合わせは？", options: ["Smiles - GOL", "Smiles - Azul", "TudoAzul - LATAM", "LATAM Pass - Iberia"], explanation: fallbackExplanation.ja },
+    "challenge-programas-02": { prompt: "2つ目のPDFにあるプログラムの組み合わせは？", options: ["TudoAzul と LATAM Pass", "Livelo と Esfera", "ConnectMiles と AAdvantage", "Miles&Go と TAP Miles"], explanation: fallbackExplanation.ja },
+    "challenge-programas-03": { prompt: "Smiles、TudoAzul、LATAM Passのほかに挙げられているのは？", options: ["Iberia Plus", "Esfera", "Livelo", "C6 Átomos"], explanation: fallbackExplanation.ja },
+    "challenge-programas-04": { prompt: "PDFが今おすすめしている行動は？", options: ["無料登録する", "すぐにマイルを買う", "すべてのクラブに加入する", "カードを解約する"], explanation: fallbackExplanation.ja },
+    "challenge-programas-05": { prompt: "資料でプログラムとともに確認できる航空会社は？", options: ["Qatar Airways", "Lufthansa", "Emirates", "Air France"], explanation: fallbackExplanation.ja },
+  },
+  zh: {
+    "review-milhas-01": { prompt: "根据材料，什么是里程？", options: ["忠诚度计划中的货币", "航空公司收取的费用", "一种信用卡", "机票固定折扣"], explanation: "里程是航空公司忠诚度计划使用的货币。" },
+    "review-milhas-02": { prompt: "材料如何定义积分？", options: ["银行或合作网站提供的奖励", "过期航空里程", "登机费", "酒店专属折扣"], explanation: "积分是银行或合作伙伴提供的奖励。" },
+    "review-milhas-03": { prompt: "一个“千里程单位”相当于多少里程？", options: ["100里程", "500里程", "1,000里程", "10,000里程"], explanation: "一个千里程单位等于1,000里程。" },
+    "review-milhas-04": { prompt: "15,000里程等于多少个千里程单位？", options: ["1.5", "15", "150", "1,500"], explanation: "15,000除以1,000等于15。" },
+    "review-milhas-05": { prompt: "材料中LATAM每千里程的价格范围是多少？", options: ["R$13至R$15", "R$14至R$18", "R$22至R$25", "最高R$55"], explanation: "材料显示LATAM的价格为R$22至R$25。" },
+    "review-programas-01": { prompt: "谁创建了所介绍的忠诚度计划？", options: ["银行", "航空公司", "旅行社", "酒店"], explanation: "这些计划由航空公司创建。" },
+    "review-programas-02": { prompt: "根据PDF，注册这些计划的费用是多少？", options: ["免费", "R$10", "需要月度订阅", "取决于信用卡"], explanation: "材料说明注册是免费的。" },
+    "review-programas-03": { prompt: "材料中GOL的忠诚度计划是哪一个？", options: ["TudoAzul", "LATAM Pass", "Smiles", "Iberia Plus"], explanation: "Smiles是GOL的忠诚度计划。" },
+    "review-programas-04": { prompt: "哪个计划与Azul航空公司相关？", options: ["TudoAzul", "Smiles", "LATAM Pass", "Qatar Airways"], explanation: "TudoAzul是Azul的计划。" },
+    "review-programas-05": { prompt: "哪个计划与LATAM相关？", options: ["Avios", "LATAM Pass", "Smiles", "TudoAzul"], explanation: "LATAM Pass是LATAM的计划。" },
+    "challenge-milhas-01": { prompt: "哪项正确区分了积分和里程？", options: ["积分来自银行/合作伙伴奖励；里程是计划货币", "里程来自银行奖励；积分是航空货币", "它们总是完全相同", "积分只在国际旅行后存在"], explanation: fallbackExplanation.zh },
+    "challenge-milhas-02": { prompt: "一个人有45,000里程，他有多少个千里程单位？", options: ["4.5", "45", "450", "4,500"], explanation: "45,000除以1,000等于45。" },
+    "challenge-milhas-03": { prompt: "哪个组合的每千里程可达到R$55？", options: ["GOL、Azul和LATAM", "Iberia、British和Qatar", "Smiles、TudoAzul和LATAM Pass", "GOL、TAP和Azul"], explanation: fallbackExplanation.zh },
+    "challenge-milhas-04": { prompt: "计算每千里程价值的逻辑是什么？", options: ["支付金额除以里程数", "里程数乘以100", "支付金额减登机费", "积分数除以信用卡"], explanation: fallbackExplanation.zh },
+    "challenge-milhas-05": { prompt: "GOL每千里程的价格范围是多少？", options: ["R$13至R$15", "R$14至R$18", "R$22至R$25", "最高R$35"], explanation: fallbackExplanation.zh },
+    "challenge-programas-01": { prompt: "根据材料，哪项关联是正确的？", options: ["Smiles - GOL", "Smiles - Azul", "TudoAzul - LATAM", "LATAM Pass - Iberia"], explanation: fallbackExplanation.zh },
+    "challenge-programas-02": { prompt: "哪一对计划出现在第二份PDF中？", options: ["TudoAzul 和 LATAM Pass", "Livelo 和 Esfera", "ConnectMiles 和 AAdvantage", "Miles&Go 和 TAP Miles"], explanation: fallbackExplanation.zh },
+    "challenge-programas-03": { prompt: "除Smiles、TudoAzul和LATAM Pass外，还提到哪个计划？", options: ["Iberia Plus", "Esfera", "Livelo", "C6 Átomos"], explanation: fallbackExplanation.zh },
+    "challenge-programas-04": { prompt: "PDF建议现在针对计划采取什么行动？", options: ["免费注册", "立即购买里程", "加入所有俱乐部", "取消信用卡"], explanation: fallbackExplanation.zh },
+    "challenge-programas-05": { prompt: "材料中还通过其计划识别了哪家航空公司？", options: ["Qatar Airways", "Lufthansa", "Emirates", "Air France"], explanation: fallbackExplanation.zh },
+  },
+};
+
+export const lessonQuestionUi: Record<string, Record<string, string>> = {
+  en: { reviewLabel: "LESSON 01 REVIEW", challengeLabel: "CHALLENGE QUESTIONS", reviewTab: "Review questions", challengeTab: "Challenge questions", title: "Before finishing, show what you learned.", reviewHint: "Each correct answer earns 5 XP. After your choice, the question is locked for 24 hours.", challengeHint: "You will earn more XP when completing these questions.", challengeXp: "You will receive 10 XP for every correct answer in these questions.", correct: "Correct answer.", correctReveal: "The correct answer is highlighted.", summary: "Round summary:", answers: "answered", perCorrect: "XP per correct answer", confirm: "Confirm", goToMap: "Go to course map", incomplete: "Answer all questions before confirming." },
+  es: { reviewLabel: "REVISIÓN DE LA LECCIÓN 01", challengeLabel: "PREGUNTAS DESAFÍO", reviewTab: "Preguntas de revisión", challengeTab: "Preguntas desafío", title: "Antes de terminar, demuestra lo que aprendiste.", reviewHint: "Cada respuesta correcta da 5 XP. Después de elegir, la pregunta queda bloqueada durante 24 horas.", challengeHint: "Recibirás más XP al completar estas preguntas.", challengeXp: "Recibirás 10 XP por cada respuesta correcta.", correct: "Respuesta correcta.", correctReveal: "La respuesta correcta está resaltada.", summary: "Resumen de la ronda:", answers: "respondidas", perCorrect: "XP por respuesta correcta", confirm: "Confirmar", goToMap: "Ir al mapa del curso", incomplete: "Responde todas las preguntas antes de confirmar." },
+  ja: { reviewLabel: "レッスン01の復習", challengeLabel: "チャレンジ問題", reviewTab: "復習問題", challengeTab: "チャレンジ問題", title: "終了する前に、学んだことを確認しましょう。", reviewHint: "正解ごとに5 XPを獲得します。選択後、問題は24時間ロックされます。", challengeHint: "これらの問題を完了すると、より多くのXPを獲得できます。", challengeXp: "正解ごとに10 XPを獲得します。", correct: "正解です。", correctReveal: "正しい答えが強調表示されています。", summary: "今回の結果:", answers: "回答済み", perCorrect: "正解ごとのXP", confirm: "確認", goToMap: "コースマップへ", incomplete: "確認する前にすべての問題に答えてください。" },
+  zh: { reviewLabel: "第01课复习", challengeLabel: "挑战问题", reviewTab: "复习问题", challengeTab: "挑战问题", title: "完成前，展示你学到的内容。", reviewHint: "每答对一题可获得5 XP。作答后，该题将锁定24小时。", challengeHint: "完成这些问题将获得更多XP。", challengeXp: "每答对一题可获得10 XP。", correct: "回答正确。", correctReveal: "正确答案已突出显示。", summary: "本轮总结：", answers: "已回答", perCorrect: "每题正确的XP", confirm: "确认", goToMap: "前往课程地图", incomplete: "确认前请回答所有问题。" },
+};

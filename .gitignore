@@ -1,0 +1,13 @@
+node_modules/
+.next/
+out/
+.env*
+!.env.example
+*.tsbuildinfo
+.vercel/
+.agents/
+tmp/
+supabase/.temp/
+
+.vercel
+.env*
