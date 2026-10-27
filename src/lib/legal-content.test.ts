@@ -28,3 +28,12 @@ test("identifies the public support and privacy contacts without exposing CPF or
   assert.match(allText, /milhasrotadas@outlook\.pt/);
   assert.doesNotMatch(allText, /\[PREENCHER: CPF|\[PREENCHER: endereço/);
 });
+
+test("keeps feedback optional and never makes it a condition for the seven-day refund", () => {
+  const refund = legalPages.find((page) => page.slug === "reembolso");
+  const refundText = refund?.sections.flatMap((section) => section.paragraphs).join(" ") ?? "";
+
+  assert.match(refundText, /feedback é opcional/i);
+  assert.match(refundText, /não é condição para solicitar reembolso/i);
+  assert.match(refundText, /analisados individualmente/i);
+});

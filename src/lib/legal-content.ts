@@ -44,8 +44,9 @@ export const legalPages: LegalPage[] = [
   {
     slug: "reembolso", title: "Política de Reembolso", updatedAt: "27 de outubro de 2026",
     sections: [
-      { heading: "Garantia e reembolso", paragraphs: ["O checkout informa garantia de 7 dias e reembolso sem burocracia. O pedido deve ser solicitado dentro desse prazo, respeitando as condições exibidas no momento da compra e a legislação aplicável."] },
+      { heading: "Garantia e reembolso", paragraphs: ["O checkout oferece garantia de 7 dias e reembolso sem burocracia. Durante esse prazo, a solicitação não exige justificativa nem feedback, respeitando as condições exibidas no momento da compra e a legislação aplicável."] },
       { heading: "Como solicitar", paragraphs: [`Solicite o reembolso pelo canal de suporte ${supportContact}, informando o e-mail usado na compra e o identificador do pedido quando disponível. O pedido também pode seguir o fluxo disponibilizado pela Kiwify.`] },
+      { heading: "Feedback e pedidos após a garantia", paragraphs: [`O feedback é opcional e não é condição para solicitar reembolso dentro dos 7 dias. Após esse prazo, pedidos excepcionais poderão ser analisados individualmente pela responsável da plataforma, sem garantia de estorno. Para enviar sugestões sobre sua experiência, use ${supportContact}.`] },
       { heading: "Acesso ao curso", paragraphs: ["Após confirmação do reembolso, o acesso ao conteúdo poderá ser removido automaticamente. A Kiwify é responsável pelo processamento financeiro do pagamento e do estorno conforme seu fluxo operacional."] },
     ],
   },
