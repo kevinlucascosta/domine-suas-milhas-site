@@ -31,8 +31,8 @@ test("declares all six premium Hero motion layers", () => {
   ]);
 });
 
-test("respects reduced motion preferences while keeping the Home content available", () => {
-  assert.equal(HOME_HERO_MOTION.ignoreReducedMotionPreference, false);
+test("keeps the requested Home motion active even when the browser reduces motion", () => {
+  assert.equal(HOME_HERO_MOTION.ignoreReducedMotionPreference, true);
 });
 
 test("uses a browser-compatible observer threshold for the scroll reveal fallback", () => {

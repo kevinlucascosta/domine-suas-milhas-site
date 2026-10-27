@@ -1,8 +1,8 @@
 /** Motion settings scoped to the public home Hero. */
 export const HOME_HERO_MOTION = {
-  // Pessoas que preferem menos movimento continuam vendo todo o conteúdo,
-  // sem os efeitos decorativos contínuos da Home.
-  ignoreReducedMotionPreference: false,
+  // Decisão do responsável: a experiência animada da Home deve permanecer
+  // disponível mesmo quando o navegador sinaliza reduzir movimento.
+  ignoreReducedMotionPreference: true,
   effects: [
     "hover",
     "loader",

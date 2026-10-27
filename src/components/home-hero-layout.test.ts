@@ -19,8 +19,8 @@ test("keeps only real learning and level cards in the Hero copy area", () => {
   assert.match(componentSource, /className="hero-learning-cards"/);
 });
 
-test("keeps Hero content visible without entrance animation when reduced motion is preferred", () => {
-  assert.match(
+test("keeps the requested Home Hero entrance active even when reduced motion is preferred", () => {
+  assert.doesNotMatch(
     globalStyles,
     /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.hero-entrance/,
   );
