@@ -31,6 +31,7 @@ import {
   lessonQuestionUi,
 } from "@/lib/lesson-01-question-translations";
 import CoverflowDocuments from "@/components/ui/coverflow-documents";
+import { CookiePreferences, CookiePreferencesLink } from "@/components/cookie-preferences";
 import {
   lesson01ChallengeQuestions,
   lesson01Documents,
@@ -9843,8 +9844,15 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
           <Link href="/curso">Curso</Link>
           <Link href="/painel">{siteNotice[language].explore}</Link>
           <Link href="/progresso">{copy.slides[12].title}</Link>
+          <Link href="/privacidade">Privacidade</Link>
+          <Link href="/cookies">Cookies</Link>
+          <Link href="/termos">Termos</Link>
+          <Link href="/reembolso">Reembolso</Link>
+          <Link href="/direitos">Seus direitos</Link>
+          <CookiePreferencesLink />
         </nav>
       </footer>
+      <CookiePreferences />
       {renderSocialShortcuts()}
       {renderBottomNav()}
       {activeMemory && (

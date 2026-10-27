@@ -1,0 +1,4 @@
+Contact: mailto:[PREENCHER: e-mail de segurança]
+Policy: https://domine-suas-milhas-site.vercel.app/privacidade
+Preferred-Languages: pt-BR, en
+Canonical: https://domine-suas-milhas-site.vercel.app/.well-known/security.txt
