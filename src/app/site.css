@@ -87,8 +87,10 @@
   .traveler-testimonial-card-top > span:last-child svg { width: 15px; height: 15px; }
   .traveler-testimonial-image { border-radius: 11px; }
   .traveler-testimonial-card img { height: auto; min-height: 0; }
-  .traveler-testimonial-controls { gap: 11px; }
-  .traveler-carousel-arrow { width: 40px; height: 40px; }
+  .traveler-testimonial-controls { width: 100%; flex-wrap: wrap; gap: 10px; }
+  .traveler-carousel-arrow { width: 44px; height: 44px; flex: 0 0 44px; }
+  .traveler-carousel-dots { flex: 0 1 auto; }
+  .traveler-carousel-count { flex: 0 0 auto; }
   .traveler-carousel-count { margin-left: 0; }
   .home-guarantee { grid-template-columns: 1fr; gap: 16px; margin-top: 46px; }
   .home-guarantee .button { width: 100%; justify-content: center; }

@@ -17,9 +17,6 @@ export const HOME_HERO_MOTION = {
     durationMs: 920,
     staggerMs: 90,
   },
-  testimonials: {
-    autoplayMs: 3600,
-  },
   scrollReveal: {
     start: 8,
     end: 46,

@@ -4711,7 +4711,6 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   const [testimonialDirection, setTestimonialDirection] = useState<
     "next" | "previous"
   >("next");
-  const [testimonialPaused, setTestimonialPaused] = useState(false);
   const [presentationAudioLanguage, setPresentationAudioLanguage] =
     useState<Lang>("pt-BR");
   const travelCarouselRef = useRef<HTMLDivElement>(null);
@@ -4738,22 +4737,6 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
       setAuthMode("login");
     }
   }, [slide]);
-  useEffect(() => {
-    // AJUSTE: carrossel automático lento, com pausa disponível ao visitante.
-    if (
-      slide !== 0 ||
-      testimonialPaused ||
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    )
-      return;
-    const timer = window.setInterval(() => {
-      setTestimonialDirection("next");
-      setTestimonialIndex(
-        (current) => (current + 1) % travelerTestimonials.length,
-      );
-    }, HOME_HERO_MOTION.testimonials.autoplayMs);
-    return () => window.clearInterval(timer);
-  }, [slide, testimonialPaused]);
   useEffect(() => {
     // AJUSTE: fallback nativo para a revelação progressiva da Home no Chrome
     // móvel, Safari e navegadores sem suporte consistente a scroll timelines.
@@ -6663,10 +6646,6 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
       <section
         className="traveler-testimonials home-reveal"
         aria-labelledby="traveler-testimonials-title"
-        onMouseEnter={() => setTestimonialPaused(true)}
-        onMouseLeave={() => setTestimonialPaused(false)}
-        onFocusCapture={() => setTestimonialPaused(true)}
-        onBlurCapture={() => setTestimonialPaused(false)}
       >
         <div className="traveler-testimonials-heading">
           <span className="small-label">RESULTADOS REAIS</span>
@@ -6752,14 +6731,6 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
               aria-label="Próximo depoimento"
             >
               <Icon name="arrowRight" size={19} />
-            </button>
-            <button
-              type="button"
-              className="traveler-carousel-pause"
-              onClick={() => setTestimonialPaused((current) => !current)}
-              aria-pressed={testimonialPaused}
-            >
-              {testimonialPaused ? "Continuar" : "Pausar"}
             </button>
           </div>
           <p className="traveler-carousel-hint">

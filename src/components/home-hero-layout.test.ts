@@ -25,3 +25,11 @@ test("keeps the requested Home Hero entrance active even when reduced motion is 
     /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.hero-entrance/,
   );
 });
+
+test("keeps traveler testimonials under manual navigation without autoplay controls", () => {
+  assert.doesNotMatch(componentSource, /autoplayMs/);
+  assert.doesNotMatch(componentSource, /traveler-carousel-pause/);
+  assert.match(componentSource, /onTouchEnd=\{handleTestimonialTouchEnd\}/);
+  assert.match(componentSource, /aria-label="Depoimento anterior"/);
+  assert.match(componentSource, /aria-label="Próximo depoimento"/);
+});

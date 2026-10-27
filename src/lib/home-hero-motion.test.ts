@@ -46,5 +46,5 @@ test("uses a browser-compatible observer threshold for the scroll reveal fallbac
 test("keeps premium home motion timing centralized", () => {
   assert.equal(HOME_HERO_MOTION.reveal.durationMs, 920);
   assert.equal(HOME_HERO_MOTION.reveal.staggerMs, 90);
-  assert.equal(HOME_HERO_MOTION.testimonials.autoplayMs, 3600);
+  assert.equal("testimonials" in HOME_HERO_MOTION, false);
 });
