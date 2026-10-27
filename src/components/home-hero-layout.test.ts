@@ -33,3 +33,7 @@ test("keeps traveler testimonials under manual navigation without autoplay contr
   assert.match(componentSource, /aria-label="Depoimento anterior"/);
   assert.match(componentSource, /aria-label="Próximo depoimento"/);
 });
+
+test("keeps traveler testimonial screenshots free of decorative quotation marks", () => {
+  assert.doesNotMatch(componentSource, /traveler-testimonial-quote/);
+});

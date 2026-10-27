@@ -6675,9 +6675,6 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
               <span>resultado real</span>
             </div>
             <div className="traveler-testimonial-image">
-              <span className="traveler-testimonial-quote" aria-hidden="true">
-                “
-              </span>
               <img src={testimonial.image} alt={testimonial.alt} />
             </div>
           </div>
