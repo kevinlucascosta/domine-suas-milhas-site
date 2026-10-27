@@ -185,7 +185,7 @@ button:disabled { cursor: not-allowed; opacity: .42; }
 @keyframes home-journey-sheen { 0%, 50% { transform: translateX(-58%) rotate(8deg); } 65%, 100% { transform: translateX(58%) rotate(8deg); } }
 @keyframes home-button-sheen { to { transform: translateX(120%); } }
 @media (prefers-reduced-motion: reduce) {
-  .home-reveal, .home-reveal *, .motion-journey-card::before, .motion-journey-card .button::after { animation: none !important; transition-duration: 1ms !important; }
+  .hero-entrance, .home-reveal, .home-reveal *, .motion-journey-card::before, .motion-journey-card .button::after { animation: none !important; transition-duration: 1ms !important; }
 }
 
 /* Concept */
