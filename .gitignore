@@ -8,6 +8,7 @@ out/
 .agents/
 tmp/
 supabase/.temp/
+.worktrees/
 
 .vercel
 .env*
