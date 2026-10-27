@@ -37,3 +37,7 @@ test("keeps traveler testimonials under manual navigation without autoplay contr
 test("keeps traveler testimonial screenshots free of decorative quotation marks", () => {
   assert.doesNotMatch(componentSource, /traveler-testimonial-quote/);
 });
+
+test("keeps the home page scrollable without showing a browser scrollbar", () => {
+  assert.match(globalStyles, /scrollbar-width:\s*none/);
+});

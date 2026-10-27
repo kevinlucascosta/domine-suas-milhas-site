@@ -17,12 +17,14 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; width: 100%; max-width: 100%; overflow-x: hidden; }
+html { scroll-behavior: smooth; width: 100%; max-width: 100%; overflow-x: hidden; scrollbar-width: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
 body {
   margin: 0;
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  scrollbar-width: none;
   background: #FFFFFF;
   color: var(--ink);
   font-family: Arial, Helvetica, sans-serif;
