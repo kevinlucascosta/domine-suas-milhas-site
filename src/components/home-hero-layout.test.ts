@@ -40,6 +40,7 @@ test("keeps traveler testimonial screenshots free of decorative quotation marks"
 
 test("keeps the home page scrollable without showing a browser scrollbar", () => {
   assert.match(globalStyles, /scrollbar-width:\s*none/);
+  assert.match(globalStyles, /html::-webkit-scrollbar, body::-webkit-scrollbar\s*\{[\s\S]*?width:\s*0[\s\S]*?height:\s*0/);
 });
 
 test("uses a Home-only smoother scroll reveal that respects reduced motion", () => {
