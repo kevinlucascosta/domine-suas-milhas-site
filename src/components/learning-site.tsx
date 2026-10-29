@@ -78,22 +78,32 @@ const travelerTestimonials = [
   {
     image: "/testimonials/depoimento-01.png",
     alt: "Mensagem de viajante sobre realizar uma viagem em família",
+    width: 1260,
+    height: 465,
   },
   {
     image: "/testimonials/depoimento-02.png",
     alt: "Mensagem de viajante sobre colocar uma estratégia em prática",
+    width: 1320,
+    height: 387,
   },
   {
     image: "/testimonials/depoimento-03.png",
     alt: "Mensagem de viajante sobre aprender a usar melhor o cartão",
+    width: 1217,
+    height: 361,
   },
   {
     image: "/testimonials/depoimento-04.png",
     alt: "Mensagem de viajante sobre transferência de pontos",
+    width: 1243,
+    height: 371,
   },
   {
     image: "/testimonials/depoimento-05.png",
     alt: "Mensagem de viajante sobre realizar o primeiro cruzeiro",
+    width: 1257,
+    height: 397,
   },
 ];
 
@@ -6705,7 +6715,12 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
               <span>resultado real</span>
             </div>
             <div className="traveler-testimonial-image">
-              <img src={testimonial.image} alt={testimonial.alt} />
+              <img
+                src={testimonial.image}
+                alt={testimonial.alt}
+                width={testimonial.width}
+                height={testimonial.height}
+              />
             </div>
           </div>
           <div

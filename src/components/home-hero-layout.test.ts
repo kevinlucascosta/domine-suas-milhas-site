@@ -68,3 +68,8 @@ test("keeps testimonial navigation stable during rapid manual changes", () => {
   assert.match(componentSource, /\.decode\(\)/);
 });
 
+test("reserves each testimonial image before its pixels finish decoding", () => {
+  assert.match(componentSource, /width=\{testimonial\.width\}/);
+  assert.match(componentSource, /height=\{testimonial\.height\}/);
+});
+
