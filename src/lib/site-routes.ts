@@ -17,3 +17,7 @@ export const siteRoutes = [
   { path: "/checkout", title: "Checkout" },
   { path: "/redefinir-senha", title: "Redefinir senha" },
 ] as const;
+
+export const publicSiteRoutes = siteRoutes.filter(
+  (route) => route.path !== "/painel",
+);

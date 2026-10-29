@@ -4581,16 +4581,12 @@ const LESSON_QUIZ_XP_KEY = "domine-lesson-01-question-xp";
 const siteNotice: Record<
   Lang,
   {
-    demo: string;
-    explore: string;
     account: string;
     payment: string;
     video: string;
   }
 > = {
   "pt-BR": {
-    demo: "Área de demonstração — dados de exemplo.",
-    explore: "Explorar o painel",
     account:
       "Cadastro e login aguardam a configuração segura do servidor. Nenhuma conta é criada nesta versão.",
     payment:
@@ -4598,8 +4594,6 @@ const siteNotice: Record<
     video: "O vídeo desta aula ainda não foi fornecido.",
   },
   en: {
-    demo: "Demo area — sample data.",
-    explore: "Explore the dashboard",
     account:
       "Registration and sign-in require a secure server configuration. No account is created in this version.",
     payment:
@@ -4607,8 +4601,6 @@ const siteNotice: Record<
     video: "The video for this lesson has not been provided yet.",
   },
   "pt-PT": {
-    demo: "Área de demonstração — dados de exemplo.",
-    explore: "Explorar o painel",
     account:
       "O registo e o início de sessão aguardam a configuração segura do servidor. Esta versão não cria contas.",
     payment:
@@ -4616,8 +4608,6 @@ const siteNotice: Record<
     video: "O vídeo desta aula ainda não foi disponibilizado.",
   },
   es: {
-    demo: "Área de demostración — datos de ejemplo.",
-    explore: "Explorar el panel",
     account:
       "El registro y el acceso requieren configurar un servidor seguro. Esta versión no crea cuentas.",
     payment:
@@ -4625,8 +4615,6 @@ const siteNotice: Record<
     video: "El vídeo de esta lección aún no está disponible.",
   },
   ja: {
-    demo: "デモエリア — サンプルデータ。",
-    explore: "ダッシュボードを見る",
     account:
       "登録とログインには安全なサーバー設定が必要です。このバージョンではアカウントは作成されません。",
     payment:
@@ -4634,8 +4622,6 @@ const siteNotice: Record<
     video: "このレッスンの動画はまだ提供されていません。",
   },
   zh: {
-    demo: "演示区域 — 示例数据。",
-    explore: "查看控制面板",
     account: "注册和登录需要配置安全的服务器。此版本不会创建账户。",
     payment: "支付尚未启用。价格和课程访问需要正式环境集成。",
     video: "本课视频尚未提供。",
@@ -9542,12 +9528,6 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
           transformar pontos, clareza e confiança em mais viagens.
         </p>
         <div className="finish-actions">
-          <button
-            className="button button-primary button-large"
-            onClick={() => goTo(4)}
-          >
-            Voltar ao dashboard <Icon name="arrowRight" size={18} />
-          </button>
           <button className="text-button" onClick={() => goTo(0)}>
             Voltar ao início <Icon name="arrowRight" size={15} />
           </button>
@@ -9934,13 +9914,6 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   return localize(
     <main className="prototype-app site-app">
       {renderHeader()}
-      {slide > 1 && slide !== 15 && slide !== 16 && (
-        <div className="site-demo-note">
-          <Icon name="info" size={15} />
-          <span>{siteNotice[language].demo}</span>
-          <Link href="/painel">{siteNotice[language].explore}</Link>
-        </div>
-      )}
       <section className={`slide-shell site-shell page-${slide}`}>
         {slide !== 0 && (
           <div className="slide-heading">
@@ -9961,7 +9934,6 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
           <Link href="/">Início</Link>
           <Link href="/como-funciona">{copy.slides[1].title}</Link>
           <Link href="/curso">Curso</Link>
-          <Link href="/painel">{siteNotice[language].explore}</Link>
           <Link href="/progresso">{copy.slides[12].title}</Link>
           <Link href="/privacidade">Privacidade</Link>
           <Link href="/cookies">Cookies</Link>

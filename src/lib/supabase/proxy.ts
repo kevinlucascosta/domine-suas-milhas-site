@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 const protectedPrefixes = [
-  "/painel", "/curso", "/aula", "/ferramentas", "/comparador", "/missoes",
+  "/curso", "/aula", "/ferramentas", "/comparador", "/missoes",
   "/quiz", "/projeto-final", "/progresso", "/perfil", "/certificado",
 ];
 
