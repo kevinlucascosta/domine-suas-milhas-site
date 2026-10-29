@@ -25,6 +25,20 @@
   }
 }
 
+/* Aplicado dinamicamente apenas enquanto a rota inicial está montada. */
+:global(html.home-scrollbar-hidden),
+:global(body.home-scrollbar-hidden) {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+:global(html.home-scrollbar-hidden::-webkit-scrollbar),
+:global(body.home-scrollbar-hidden::-webkit-scrollbar) {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 @media (max-width: 620px) {
   .flow :global(.travel-memory-next-card) {
     align-self: auto;

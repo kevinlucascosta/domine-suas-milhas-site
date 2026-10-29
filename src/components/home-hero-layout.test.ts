@@ -84,3 +84,18 @@ test("constrains the stamp card only at the mobile breakpoint", () => {
   assert.match(homeMotionStyles, /max-height:\s*262px/);
 });
 
+test("hides the scrollbar only while the Home route is mounted", () => {
+  const homeMotionStyles = readFileSync(
+    join(process.cwd(), "src", "components", "home-motion.module.css"),
+    "utf8",
+  );
+
+  assert.match(componentSource, /classList\.add\("home-scrollbar-hidden"\)/);
+  assert.match(
+    componentSource,
+    /classList\.remove\("home-scrollbar-hidden"\)/,
+  );
+  assert.match(homeMotionStyles, /html\.home-scrollbar-hidden/);
+  assert.match(homeMotionStyles, /scrollbar-width:\s*none/);
+  assert.match(homeMotionStyles, /::-webkit-scrollbar/);
+});

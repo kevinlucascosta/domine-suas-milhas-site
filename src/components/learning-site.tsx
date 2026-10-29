@@ -4767,6 +4767,18 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
       void image.decode().catch(() => undefined);
     });
   }, [slide, testimonialIndex]);
+
+  useEffect(() => {
+    if (slide !== 0) return;
+
+    // Oculta somente o indicador visual de rolagem enquanto a Home estiver aberta.
+    const scrollRoots = [document.documentElement, document.body];
+    scrollRoots.forEach((root) => root.classList.add("home-scrollbar-hidden"));
+
+    return () => {
+      scrollRoots.forEach((root) => root.classList.remove("home-scrollbar-hidden"));
+    };
+  }, [slide]);
   useEffect(() => {
     // AJUSTE: fallback nativo para a revelação progressiva da Home no Chrome
     // móvel, Safari e navegadores sem suporte consistente a scroll timelines.
