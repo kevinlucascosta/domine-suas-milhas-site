@@ -60,3 +60,11 @@ test("uses a Home-only smoother scroll reveal that respects reduced motion", () 
   assert.match(homeMotionStyles, /opacity:\s*1/);
   assert.match(homeMotionStyles, /transform:\s*none/);
 });
+
+test("keeps testimonial navigation stable during rapid manual changes", () => {
+  assert.doesNotMatch(componentSource, /key=\{testimonial\.image\}/);
+  assert.match(componentSource, /testimonialTransitionLock/);
+  assert.match(componentSource, /preloadTestimonialImages/);
+  assert.match(componentSource, /\.decode\(\)/);
+});
+

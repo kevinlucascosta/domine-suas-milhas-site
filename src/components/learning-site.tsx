@@ -4713,10 +4713,12 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   const [testimonialDirection, setTestimonialDirection] = useState<
     "next" | "previous"
   >("next");
+  const [testimonialAnimating, setTestimonialAnimating] = useState(false);
   const [presentationAudioLanguage, setPresentationAudioLanguage] =
     useState<Lang>("pt-BR");
   const travelCarouselRef = useRef<HTMLDivElement>(null);
   const testimonialTouchStart = useRef(0);
+  const testimonialTransitionLock = useRef(false);
   const presentationVideoRef = useRef<HTMLVideoElement>(null);
   const presentationAudioRef = useRef<HTMLAudioElement>(null);
   const lessonQuestionLockRef = useRef(new Set<string>());
@@ -4739,6 +4741,22 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
       setAuthMode("login");
     }
   }, [slide]);
+  useEffect(() => {
+    if (slide !== 0) return;
+
+    const preloadTestimonialImages = [1, -1].map((offset) => {
+      const index =
+        (testimonialIndex + offset + travelerTestimonials.length) %
+        travelerTestimonials.length;
+      return travelerTestimonials[index].image;
+    });
+
+    preloadTestimonialImages.forEach((source) => {
+      const image = new window.Image();
+      image.src = source;
+      void image.decode().catch(() => undefined);
+    });
+  }, [slide, testimonialIndex]);
   useEffect(() => {
     // AJUSTE: fallback nativo para a revelação progressiva da Home no Chrome
     // móvel, Safari e navegadores sem suporte consistente a scroll timelines.
@@ -6628,10 +6646,14 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
       next: number,
       direction: "next" | "previous" = "next",
     ) => {
+      if (testimonialTransitionLock.current) return;
+      const nextIndex =
+        (next + travelerTestimonials.length) % travelerTestimonials.length;
+      if (nextIndex === testimonialIndex) return;
+      testimonialTransitionLock.current = true;
       setTestimonialDirection(direction);
-      setTestimonialIndex(
-        (next + travelerTestimonials.length) % travelerTestimonials.length,
-      );
+      setTestimonialIndex(nextIndex);
+      setTestimonialAnimating(true);
     };
     const handleTestimonialTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
       const endX =
@@ -6662,8 +6684,14 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
         <div className="traveler-testimonial-stage">
           <span className="traveler-testimonial-orbit" aria-hidden="true" />
           <div
-            key={testimonial.image}
-            className={`traveler-testimonial-card is-${testimonialDirection}`}
+            className={`traveler-testimonial-card ${
+              testimonialAnimating ? `is-${testimonialDirection}` : ""
+            }`}
+            onAnimationEnd={(event) => {
+              if (event.currentTarget !== event.target) return;
+              testimonialTransitionLock.current = false;
+              setTestimonialAnimating(false);
+            }}
             onTouchStart={(event) => {
               testimonialTouchStart.current = event.touches[0]?.clientX ?? 0;
             }}
