@@ -37,3 +37,15 @@ test("keeps feedback optional and never makes it a condition for the seven-day r
   assert.match(refundText, /não é condição para solicitar reembolso/i);
   assert.match(refundText, /analisados individualmente/i);
 });
+
+test("allows educational access by minors while requiring a guardian for account and purchase", () => {
+  const privacy = legalPages.find((page) => page.slug === "privacidade");
+  const terms = legalPages.find((page) => page.slug === "termos");
+  const privacyText = privacy?.sections.flatMap((section) => section.paragraphs).join(" ") ?? "";
+  const termsText = terms?.sections.flatMap((section) => section.paragraphs).join(" ") ?? "";
+
+  assert.match(privacyText, /crianças e adolescentes/i);
+  assert.match(privacyText, /melhor interesse/i);
+  assert.match(termsText, /acesso ao conteúdo educativo/i);
+  assert.match(termsText, /responsável legal/i);
+});
