@@ -4956,6 +4956,12 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
       ? attempt
       : undefined;
   };
+
+  const notify = (message: string) => {
+    setToast(message);
+    window.setTimeout(() => setToast(""), 2600);
+  };
+
   const answerLessonQuestion = async (
     question: LessonQuestion,
     selectedIndex: number,
@@ -5571,11 +5577,6 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
         props.children = localize(node.props.children as ReactNode);
       return cloneElement(node, props);
     });
-
-  const notify = (message: string) => {
-    setToast(message);
-    window.setTimeout(() => setToast(""), 2600);
-  };
 
   const presentationAudioSources: Record<Lang, string | null> = {
     "pt-BR": null,
