@@ -24,3 +24,38 @@
     transform: none;
   }
 }
+
+@media (max-width: 620px) {
+  .flow :global(.travel-memory-next-card) {
+    align-self: auto;
+    height: auto;
+    min-height: clamp(244px, 70vw, 262px);
+    max-height: 262px;
+    padding: 16px;
+  }
+
+  .flow :global(.travel-memory-next-icon) {
+    width: 36px;
+    height: 36px;
+  }
+
+  .flow :global(.travel-memory-next .small-label) {
+    margin-top: 12px;
+  }
+
+  .flow :global(.travel-memory-next h3) {
+    max-width: 160px;
+    margin: 6px 0;
+    font-size: clamp(20px, 6vw, 22px);
+  }
+
+  .flow :global(.travel-memory-next p) {
+    max-width: 160px;
+    font-size: 9px;
+    line-height: 1.45;
+  }
+
+  .flow :global(.travel-memory-next-action) {
+    margin-top: 12px;
+  }
+}

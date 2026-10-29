@@ -73,3 +73,14 @@ test("reserves each testimonial image before its pixels finish decoding", () => 
   assert.match(componentSource, /height=\{testimonial\.height\}/);
 });
 
+test("constrains the stamp card only at the mobile breakpoint", () => {
+  const homeMotionStyles = readFileSync(
+    join(process.cwd(), "src", "components", "home-motion.module.css"),
+    "utf8",
+  );
+
+  assert.match(homeMotionStyles, /@media \(max-width: 620px\)/);
+  assert.match(homeMotionStyles, /travel-memory-next-card/);
+  assert.match(homeMotionStyles, /max-height:\s*262px/);
+});
+
