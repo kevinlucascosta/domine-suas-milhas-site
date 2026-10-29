@@ -47,6 +47,7 @@ import {
   createClient as createSupabaseClient,
   hasSupabaseBrowserConfig,
 } from "@/lib/supabase/client";
+import homeMotionStyles from "./home-motion.module.css";
 
 type Lang = "pt-BR" | "en" | "pt-PT" | "es" | "ja" | "zh";
 type AvatarSource = "google" | "uploaded";
@@ -9482,7 +9483,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
     switch (slide) {
       case 0:
         return (
-          <div className="home-flow">
+          <div className={`home-flow ${homeMotionStyles.flow}`}>
             {renderCover()}
             <section
               className="home-video-introduction hero-scroll-reveal"

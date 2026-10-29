@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -40,4 +40,23 @@ test("keeps traveler testimonial screenshots free of decorative quotation marks"
 
 test("keeps the home page scrollable without showing a browser scrollbar", () => {
   assert.match(globalStyles, /scrollbar-width:\s*none/);
+});
+
+test("uses a Home-only smoother scroll reveal that respects reduced motion", () => {
+  const homeMotionPath = join(
+    process.cwd(),
+    "src",
+    "components",
+    "home-motion.module.css",
+  );
+  assert.ok(existsSync(homeMotionPath));
+  const homeMotionStyles = readFileSync(homeMotionPath, "utf8");
+
+  assert.match(componentSource, /homeMotionStyles\.flow/);
+  assert.match(homeMotionStyles, /620ms/);
+  assert.match(homeMotionStyles, /cubic-bezier\(0\.22, 1, 0\.36, 1\)/);
+  assert.match(homeMotionStyles, /prefers-reduced-motion:\s*reduce/);
+  assert.match(homeMotionStyles, /animation:\s*none/);
+  assert.match(homeMotionStyles, /opacity:\s*1/);
+  assert.match(homeMotionStyles, /transform:\s*none/);
 });
