@@ -39,6 +39,7 @@ import {
   type LessonQuestion,
 } from "@/lib/lesson-01-content";
 import { getLevelProgress } from "@/lib/level-system";
+import { canContinueWithGuardianAuthorization } from "@/lib/guardian-authorization";
 import {
   isLessonQuestionLocked,
   mergeLessonQuestionXpEntries,
@@ -4653,6 +4654,8 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   const [authMode, setAuthMode] = useState<"login" | "signup">("signup");
   const [authEmail, setAuthEmail] = useState("");
   const [authPassword, setAuthPassword] = useState("");
+  const [guardianAuthorizationConfirmed, setGuardianAuthorizationConfirmed] =
+    useState(false);
   const [authBusy, setAuthBusy] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   const [authenticatedUser, setAuthenticatedUser] = useState<User | null>(null);
@@ -5944,6 +5947,18 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   };
 
   const handleAccountAccess = async () => {
+    if (
+      authMode === "signup" &&
+      !canContinueWithGuardianAuthorization(guardianAuthorizationConfirmed)
+    ) {
+      notify(
+        translateVisibleValue(
+          "Para continuar, confirme que tem 18 anos ou a autorização do seu responsável legal.",
+          language,
+        ),
+      );
+      return;
+    }
     if (!hasSupabaseBrowserConfig()) {
       notify(
         "O acesso seguro está sendo configurado. Tente novamente em instantes.",
@@ -6005,6 +6020,18 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   };
 
   const handleGoogleAccess = async () => {
+    if (
+      authMode === "signup" &&
+      !canContinueWithGuardianAuthorization(guardianAuthorizationConfirmed)
+    ) {
+      notify(
+        translateVisibleValue(
+          "Para continuar, confirme que tem 18 anos ou a autorização do seu responsável legal.",
+          language,
+        ),
+      );
+      return;
+    }
     if (!hasSupabaseBrowserConfig()) {
       notify(
         "O acesso seguro está sendo configurado. Tente novamente em instantes.",
@@ -6879,6 +6906,18 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
             <Icon name="lock" size={16} />
           </div>
         </label>
+        {authMode === "signup" && (
+          <label className="guardian-authorization">
+            <input
+              checked={guardianAuthorizationConfirmed}
+              onChange={(event) => setGuardianAuthorizationConfirmed(event.target.checked)}
+              type="checkbox"
+            />
+            <span>
+              Confirmo que tenho 18 anos ou que possuo autorização do meu responsável legal para criar uma conta ou realizar uma compra.
+            </span>
+          </label>
+        )}
         <button
           className="button button-primary full-button"
           disabled={authBusy}
@@ -7179,6 +7218,19 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
     </div>
   );
 
+  const handleCheckout = () => {
+    if (!canContinueWithGuardianAuthorization(guardianAuthorizationConfirmed)) {
+      notify(
+        translateVisibleValue(
+          "Para continuar, confirme que tem 18 anos ou a autorização do seu responsável legal.",
+          language,
+        ),
+      );
+      return;
+    }
+    window.location.assign("/api/checkout");
+  };
+
   const renderCheckout = () => (
     <div className="checkout-layout">
       <section className="checkout-card card-surface">
@@ -7203,9 +7255,19 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
             <small>Aulas, ferramentas e materiais do curso</small>
           </div>
         </div>
+        <label className="guardian-authorization">
+          <input
+            checked={guardianAuthorizationConfirmed}
+            onChange={(event) => setGuardianAuthorizationConfirmed(event.target.checked)}
+            type="checkbox"
+          />
+          <span>
+            Confirmo que tenho 18 anos ou que possuo autorização do meu responsável legal para criar uma conta ou realizar uma compra.
+          </span>
+        </label>
         <button
           className="button button-primary full-button"
-          onClick={() => window.location.assign("/api/checkout")}
+          onClick={handleCheckout}
         >
           Prosseguir para pagamento <Icon name="arrowRight" size={17} />
         </button>

@@ -553,6 +553,8 @@ button, input, select { font-family: Inter, Manrope, Arial, Helvetica, sans-seri
 .google-login-button:hover:not(:disabled), .google-login-button:focus-visible { border-color: #708090; box-shadow: 0 7px 18px rgba(48,48,48,.08); transform: translateY(-1px); }
 .google-mark { color: #4285F4; font-family: Arial, sans-serif; }
 .google-mark { color: #303030; }
+.guardian-authorization { display: flex; align-items: flex-start; gap: 8px; margin-top: 14px; color: #708090; cursor: pointer; font-size: 10px; font-weight: 700; line-height: 1.45; text-align: left; }
+.guardian-authorization input { width: 16px; height: 16px; flex: none; margin: 0; accent-color: #303030; }
 .payment-intro { background: #DDE9F3; border-color: #C8CDD2; }
 .payment-intro p, .payment-option small, .payment-note, .color-legend { color: #708090; }
 .payment-option, .payment-option:hover, .payment-option.selected { background: #FFFFFF; border-color: #C8CDD2; }
