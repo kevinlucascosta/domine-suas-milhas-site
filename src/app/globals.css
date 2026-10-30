@@ -253,8 +253,8 @@ button:disabled { cursor: not-allowed; opacity: .42; }
 .home-scroll-to-top:active { transform: scale(.96); }
 .site-footer:has(.site-footer-sky-tech) { flex-wrap: wrap; }
 .site-footer-sky-tech { display: block; flex-basis: 100%; width: 100%; margin: 16px auto 0; line-height: 0; }
-.site-footer-sky-tech img { display: block; width: 240px; max-width: 100%; height: auto; margin: 0 auto; border-radius: 10px; }
-@media (max-width: 600px) { .site-footer-sky-tech img { width: 160px; } }
+.site-footer-sky-tech img { display: block; width: 300px; max-width: 100%; height: auto; margin: 0 auto; border-radius: 10px; }
+@media (max-width: 600px) { .site-footer-sky-tech img { width: 190px; } }
 @keyframes menuIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
