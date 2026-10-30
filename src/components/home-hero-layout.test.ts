@@ -107,3 +107,19 @@ test("offers a Home-only control to return smoothly to the top after scrolling",
   assert.match(componentSource, /className="home-scroll-to-top"/);
   assert.match(globalStyles, /\.home-scroll-to-top/);
 });
+
+test("links the Sky Tech signature from the footer and the fixed shortcut", () => {
+  assert.match(componentSource, /href="https:\/\/skytechbr\.vercel\.app\/#inicio"/);
+  assert.match(componentSource, /src="\/sky-tech-logo\.png"/);
+  assert.match(componentSource, /src="\/sky-tech-icon\.png"/);
+  assert.match(componentSource, /className="site-footer-sky-tech"/);
+  assert.match(componentSource, /className="social-shortcut social-sky-tech"/);
+  assert.match(globalStyles, /\.site-footer-sky-tech/);
+  assert.match(globalStyles, /\.social-sky-tech/);
+  assert.match(globalStyles, /\.site-footer:has\(\.site-footer-sky-tech\)/);
+  assert.match(globalStyles, /flex-basis:\s*100%/);
+  assert.match(
+    globalStyles,
+    /\.site-footer-sky-tech img\s*\{[\s\S]*?width:\s*240px/,
+  );
+});

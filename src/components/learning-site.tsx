@@ -6436,6 +6436,21 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
         <SocialIcon name="whatsapp" />
         <span>WhatsApp</span>
       </a>
+      <a
+        className="social-shortcut social-sky-tech"
+        href="https://skytechbr.vercel.app/#inicio"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Visitar Sky Tech"
+      >
+        <Image
+          src="/sky-tech-icon.png"
+          alt=""
+          width={36}
+          height={36}
+        />
+        <span>Sky Tech</span>
+      </a>
     </aside>
   );
 
@@ -9970,6 +9985,21 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
           <Link href="/direitos">Seus direitos</Link>
           <CookiePreferencesLink />
         </nav>
+        <a
+          className="site-footer-sky-tech"
+          href="https://skytechbr.vercel.app/#inicio"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Visitar Sky Tech"
+        >
+          <Image
+            src="/sky-tech-logo.png"
+            alt="Sky Tech"
+            width={240}
+            height={120}
+            sizes="(max-width: 600px) 160px, 240px"
+          />
+        </a>
       </footer>
       <CookiePreferences />
       {renderSocialShortcuts()}

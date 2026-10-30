@@ -245,10 +245,16 @@ button:disabled { cursor: not-allowed; opacity: .42; }
 .social-shortcut:hover span, .social-shortcut:focus-visible span { opacity: 1; transform: translateX(0); }
 .social-instagram { background: radial-gradient(circle at 28% 105%, #feda75 0 18%, #fa7e1e 33%, #d62976 58%, #962fbf 78%, #4f5bd5 100%); }
 .social-whatsapp { background: #25D366; }
-.home-scroll-to-top { position: fixed; z-index: 41; right: max(16px, env(safe-area-inset-right)); bottom: 216px; width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); background: #FFFFFF; box-shadow: 0 10px 24px rgba(48, 48, 48, .18); transition: transform .2s ease, box-shadow .2s ease, background .2s ease; -webkit-tap-highlight-color: transparent; }
+.social-sky-tech { overflow: hidden; background: #111214; }
+.social-sky-tech img { width: 36px; height: 36px; object-fit: contain; }
+.home-scroll-to-top { position: fixed; z-index: 41; right: max(16px, env(safe-area-inset-right)); bottom: 280px; width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); background: #FFFFFF; box-shadow: 0 10px 24px rgba(48, 48, 48, .18); transition: transform .2s ease, box-shadow .2s ease, background .2s ease; -webkit-tap-highlight-color: transparent; }
 .home-scroll-to-top svg { transform: rotate(180deg); }
 .home-scroll-to-top:hover, .home-scroll-to-top:focus-visible { outline: 0; background: var(--soft); transform: translateY(-2px); box-shadow: 0 14px 28px rgba(48, 48, 48, .24); }
 .home-scroll-to-top:active { transform: scale(.96); }
+.site-footer:has(.site-footer-sky-tech) { flex-wrap: wrap; }
+.site-footer-sky-tech { display: block; flex-basis: 100%; width: 100%; margin: 16px auto 0; line-height: 0; }
+.site-footer-sky-tech img { display: block; width: 240px; max-width: 100%; height: auto; margin: 0 auto; border-radius: 10px; }
+@media (max-width: 600px) { .site-footer-sky-tech img { width: 160px; } }
 @keyframes menuIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
 
