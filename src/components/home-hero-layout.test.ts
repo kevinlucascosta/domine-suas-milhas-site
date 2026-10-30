@@ -100,3 +100,10 @@ test("hides the scrollbar only while the Home route is mounted", () => {
   assert.match(homeMotionStyles, /scrollbar-width:\s*none/);
   assert.match(homeMotionStyles, /::-webkit-scrollbar/);
 });
+
+test("offers a Home-only control to return smoothly to the top after scrolling", () => {
+  assert.match(componentSource, /slide === 0 && showScrollToTop/);
+  assert.match(componentSource, /window\.scrollTo\(\{ top: 0, behavior: "smooth" \}\)/);
+  assert.match(componentSource, /className="home-scroll-to-top"/);
+  assert.match(globalStyles, /\.home-scroll-to-top/);
+});

@@ -160,6 +160,19 @@ function subscribeLanguage(callback: () => void) {
 function serverLanguage(): Lang {
   return "pt-BR";
 }
+function subscribeScrollPosition(callback: () => void) {
+  window.addEventListener("scroll", callback, { passive: true });
+  return () => window.removeEventListener("scroll", callback);
+}
+function subscribeWithoutScroll(callback: () => void) {
+  return () => undefined;
+}
+function readScrollPosition() {
+  return window.scrollY;
+}
+function serverScrollPosition() {
+  return 0;
+}
 type IconName =
   | "home"
   | "book"
@@ -227,6 +240,15 @@ const localizedBrand: Record<Lang, { name: string; tagline: string }> = {
   es: { name: "MILLAS ROTATIVAS", tagline: "DOMINA TUS MILLAS" },
   ja: { name: "巡るマイル", tagline: "マイルを極める" },
   zh: { name: "飞行里程", tagline: "掌握你的里程" },
+};
+
+const scrollToTopLabels: Record<Lang, string> = {
+  "pt-BR": "Voltar ao topo",
+  en: "Back to top",
+  "pt-PT": "Voltar ao topo",
+  es: "Volver al inicio",
+  ja: "ページの先頭に戻る",
+  zh: "返回顶部",
 };
 
 const currencyByLanguage: Record<
@@ -4631,6 +4653,12 @@ const siteNotice: Record<
 export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   const slide = pageIndex;
   const router = useRouter();
+  const scrollPosition = useSyncExternalStore(
+    slide === 0 ? subscribeScrollPosition : subscribeWithoutScroll,
+    readScrollPosition,
+    serverScrollPosition,
+  );
+  const showScrollToTop = slide === 0 && scrollPosition > 520;
   const language = useSyncExternalStore(
     subscribeLanguage,
     readLanguage,
@@ -9945,6 +9973,17 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
       </footer>
       <CookiePreferences />
       {renderSocialShortcuts()}
+      {slide === 0 && showScrollToTop && (
+        <button
+          type="button"
+          className="home-scroll-to-top"
+          aria-label={scrollToTopLabels[language]}
+          title={scrollToTopLabels[language]}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        >
+          <Icon name="chevronDown" size={20} />
+        </button>
+      )}
       {renderBottomNav()}
       {activeMemory && (
         <div
