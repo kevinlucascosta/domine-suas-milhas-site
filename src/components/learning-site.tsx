@@ -9995,9 +9995,9 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
           <Image
             src="/sky-tech-logo.png"
             alt="Sky Tech"
-            width={300}
-            height={150}
-            sizes="(max-width: 600px) 190px, 300px"
+            width={360}
+            height={180}
+            sizes="(max-width: 600px) 220px, 360px"
           />
         </a>
       </footer>

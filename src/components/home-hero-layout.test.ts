@@ -118,8 +118,6 @@ test("links the Sky Tech signature from the footer and the fixed shortcut", () =
   assert.match(globalStyles, /\.social-sky-tech/);
   assert.match(globalStyles, /\.site-footer:has\(\.site-footer-sky-tech\)/);
   assert.match(globalStyles, /flex-basis:\s*100%/);
-  assert.match(
-    globalStyles,
-    /\.site-footer-sky-tech img\s*\{[\s\S]*?width:\s*300px/,
-  );
+  const footerLogoRule = globalStyles.match(/\.site-footer-sky-tech img\s*\{([^}]*)\}/)?.[1];
+  assert.match(footerLogoRule ?? "", /width:\s*360px/);
 });
