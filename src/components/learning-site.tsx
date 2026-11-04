@@ -189,6 +189,8 @@ type IconName =
   | "clock"
   | "spark"
   | "lock"
+  | "eye"
+  | "eyeOff"
   | "mail"
   | "creditCard"
   | "pix"
@@ -249,6 +251,15 @@ const scrollToTopLabels: Record<Lang, string> = {
   es: "Volver al inicio",
   ja: "ページの先頭に戻る",
   zh: "返回顶部",
+};
+
+const passwordVisibilityLabels: Record<Lang, { hide: string; show: string }> = {
+  "pt-BR": { hide: "Ocultar senha", show: "Mostrar senha" },
+  en: { hide: "Hide password", show: "Show password" },
+  "pt-PT": { hide: "Ocultar palavra-passe", show: "Mostrar palavra-passe" },
+  es: { hide: "Ocultar contraseña", show: "Mostrar contraseña" },
+  ja: { hide: "パスワードを非表示", show: "パスワードを表示" },
+  zh: { hide: "隐藏密码", show: "显示密码" },
 };
 
 const currencyByLanguage: Record<
@@ -4434,6 +4445,19 @@ function Icon({
         <path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3" />
       </>
     ),
+    eye: (
+      <>
+        <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
+        <circle cx="12" cy="12" r="2.6" />
+      </>
+    ),
+    eyeOff: (
+      <>
+        <path d="m3 3 18 18" />
+        <path d="M10.6 6.2A9.8 9.8 0 0 1 12 6c6 0 9.5 6 9.5 6a17.7 17.7 0 0 1-3.1 3.8M6.1 6.1A17.8 17.8 0 0 0 2.5 12S6 18 12 18c1.2 0 2.4-.2 3.4-.6" />
+        <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2" />
+      </>
+    ),
     mail: (
       <>
         <rect x="3" y="5" width="18" height="14" rx="2" />
@@ -4740,6 +4764,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   const [authMode, setAuthMode] = useState<"login" | "signup">("signup");
   const [authEmail, setAuthEmail] = useState("");
   const [authPassword, setAuthPassword] = useState("");
+  const [showAuthPassword, setShowAuthPassword] = useState(false);
   const [guardianAuthorizationConfirmed, setGuardianAuthorizationConfirmed] =
     useState(false);
   const [authBusy, setAuthBusy] = useState(false);
@@ -4763,6 +4788,9 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   });
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirmation, setNewPasswordConfirmation] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showNewPasswordConfirmation, setShowNewPasswordConfirmation] =
+    useState(false);
   const [recoveryReady, setRecoveryReady] = useState(false);
   const [recoveryChecked, setRecoveryChecked] = useState(false);
   const [passwordUpdated, setPasswordUpdated] = useState(false);
@@ -6997,14 +7025,31 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
             <input
               value={authPassword}
               onChange={(event) => setAuthPassword(event.target.value)}
-              type="password"
+              type={showAuthPassword ? "text" : "password"}
               placeholder="Crie uma senha segura"
               autoComplete={
                 authMode === "login" ? "current-password" : "new-password"
               }
               minLength={8}
             />
-            <Icon name="lock" size={16} />
+            <button
+              type="button"
+              className="password-visibility-toggle"
+              aria-label={
+                showAuthPassword
+                  ? passwordVisibilityLabels[language].hide
+                  : passwordVisibilityLabels[language].show
+              }
+              aria-pressed={showAuthPassword}
+              title={
+                showAuthPassword
+                  ? passwordVisibilityLabels[language].hide
+                  : passwordVisibilityLabels[language].show
+              }
+              onClick={() => setShowAuthPassword((current) => !current)}
+            >
+              <Icon name={showAuthPassword ? "eyeOff" : "eye"} size={18} />
+            </button>
           </div>
         </label>
         {authMode === "signup" && (
@@ -7119,12 +7164,29 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
                 <input
                   value={newPassword}
                   onChange={(event) => setNewPassword(event.target.value)}
-                  type="password"
+                  type={showNewPassword ? "text" : "password"}
                   placeholder="Nova senha"
                   autoComplete="new-password"
                   minLength={8}
                 />
-                <Icon name="lock" size={16} />
+                <button
+                  type="button"
+                  className="password-visibility-toggle"
+                  aria-label={
+                    showNewPassword
+                      ? passwordVisibilityLabels[language].hide
+                      : passwordVisibilityLabels[language].show
+                  }
+                  aria-pressed={showNewPassword}
+                  title={
+                    showNewPassword
+                      ? passwordVisibilityLabels[language].hide
+                      : passwordVisibilityLabels[language].show
+                  }
+                  onClick={() => setShowNewPassword((current) => !current)}
+                >
+                  <Icon name={showNewPassword ? "eyeOff" : "eye"} size={18} />
+                </button>
               </div>
             </label>
             <label className="field-label">
@@ -7135,12 +7197,34 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
                   onChange={(event) =>
                     setNewPasswordConfirmation(event.target.value)
                   }
-                  type="password"
+                  type={showNewPasswordConfirmation ? "text" : "password"}
                   placeholder="Confirmar nova senha"
                   autoComplete="new-password"
                   minLength={8}
                 />
-                <Icon name="lock" size={16} />
+                <button
+                  type="button"
+                  className="password-visibility-toggle"
+                  aria-label={
+                    showNewPasswordConfirmation
+                      ? passwordVisibilityLabels[language].hide
+                      : passwordVisibilityLabels[language].show
+                  }
+                  aria-pressed={showNewPasswordConfirmation}
+                  title={
+                    showNewPasswordConfirmation
+                      ? passwordVisibilityLabels[language].hide
+                      : passwordVisibilityLabels[language].show
+                  }
+                  onClick={() =>
+                    setShowNewPasswordConfirmation((current) => !current)
+                  }
+                >
+                  <Icon
+                    name={showNewPasswordConfirmation ? "eyeOff" : "eye"}
+                    size={18}
+                  />
+                </button>
               </div>
             </label>
             <button

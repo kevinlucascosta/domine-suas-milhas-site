@@ -450,6 +450,9 @@ button, input, select { font-family: Inter, Manrope, Arial, Helvetica, sans-seri
 .password-reset-card > p { color: #708090; font-size: 12px; line-height: 1.55; margin: 0 auto 19px; max-width: 330px; }
 .password-reset-card .field-label { text-align: left; }
 .password-reset-card .button { justify-content: center; }
+.password-visibility-toggle { align-items: center; background: transparent; border: 0; color: #708090; cursor: pointer; display: inline-flex; flex: 0 0 36px; height: 36px; justify-content: center; margin: 0 -8px 0 4px; padding: 0; width: 36px; }
+.password-visibility-toggle:hover { color: #303030; }
+.password-visibility-toggle:focus-visible { border-radius: 6px; box-shadow: 0 0 0 3px #DDE9F3; outline: 0; }
 @media (max-width: 600px) { .password-reset-layout { min-height: auto; padding: 5px 0; } .password-reset-card { padding: 25px 20px; } }
 
 /* Keep the visual layers inside the device viewport on narrow screens. */
