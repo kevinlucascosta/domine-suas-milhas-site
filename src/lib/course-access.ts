@@ -4,7 +4,9 @@ import { createServiceRoleClient, hasSupabaseServerConfig } from "@/lib/supabase
 export type CourseAccessResult = "granted" | "pending" | "unavailable";
 
 /** Resolves paid course access solely from a verified Supabase user and server-side purchase records. */
-export async function claimCourseAccessForUser(user: User): Promise<CourseAccessResult> {
+export async function claimCourseAccessForUser(
+  user: Pick<User, "id" | "email">,
+): Promise<CourseAccessResult> {
   const email = user.email?.trim().toLowerCase();
   if (!email || !hasSupabaseServerConfig()) return "unavailable";
 
