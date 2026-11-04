@@ -596,12 +596,14 @@ button, input, select { font-family: Inter, Manrope, Arial, Helvetica, sans-seri
 .dashboard-banner, .course-progress-card, .missions-top, .simulator-result { background: #303030; color: #FFFFFF; }
 .dashboard-banner span, .course-progress-number strong, .result-number strong { color: #C8CDD2; }
 .dashboard-banner strong, .course-progress-card h3, .missions-top h3 { color: #FFFFFF; }
-.course-progress-card::after { z-index: 0; opacity: 1; border-color: rgba(212, 166, 74, .38); box-shadow: 0 0 0 30px rgba(212, 166, 74, .08), 0 0 0 60px rgba(212, 166, 74, .035); }
+.course-progress-card, .missions-top { isolation: isolate; }
+.course-bar, .week-progress { position: relative; z-index: 1; }
+.course-progress-card::after { z-index: 0; top: -160px; opacity: 1; border-color: rgba(212, 166, 74, .38); box-shadow: 0 0 0 30px rgba(212, 166, 74, .08), 0 0 0 60px rgba(212, 166, 74, .035); }
 .course-progress-card > div { position: relative; z-index: 1; }
 .course-progress-card .small-label { color: var(--amber-soft); }
 .course-progress-card p { color: #F4F8FC; }
 .course-progress-number strong { color: var(--amber); }
-.missions-top::after { border-color: rgba(212, 166, 74, .32); box-shadow: 0 0 0 25px rgba(212, 166, 74, .06); }
+.missions-top::after { z-index: 0; top: -155px; border-color: rgba(212, 166, 74, .32); box-shadow: 0 0 0 25px rgba(212, 166, 74, .06); }
 .missions-top .small-label { color: var(--amber-soft); }
 .week-ring { border-right-color: var(--amber); border-top-color: var(--amber); }
 .week-ring strong { color: var(--amber); }
