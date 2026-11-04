@@ -9,6 +9,15 @@
 .home-section-heading h2, .home-enroll h2 { font-family: 'Playfair Display', Georgia, serif; font-size: clamp(28px, 3vw, 40px); line-height: 1.18; letter-spacing: -.035em; margin: 12px 0; }
 .home-section-heading p, .home-enroll p { color: var(--muted); font-size: 14px; line-height: 1.7; }
 .home-enroll { padding: 36px; display: flex; justify-content: space-between; align-items: center; gap: 25px; background: var(--soft); }
+.home-enroll > div { min-width: 0; max-width: 720px; }
+.home-access-benefits-wrap { margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+.home-access-benefits-label { color: var(--amber-strong); }
+.home-access-benefits { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 12px 0 0; padding: 0; list-style: none; }
+.home-access-benefits li { min-width: 0; display: grid; grid-template-columns: 18px minmax(0, 1fr); column-gap: 8px; padding: 11px 12px; border: 1px solid #d8c48f; border-radius: 12px; color: var(--ink); background: #fffdf7; font-size: 12px; line-height: 1.38; }
+.home-access-benefits li::before { content: "✓"; display: grid; place-items: center; grid-row: 1 / span 2; width: 18px; height: 18px; margin-top: 1px; border-radius: 50%; color: #fff; background: var(--amber-strong); font-size: 11px; line-height: 1; }
+.home-access-benefits li b { font-size: 10px; letter-spacing: .08em; line-height: 1.35; }
+.home-access-benefits li span { margin-top: 3px; color: var(--muted); font-size: 11px; font-weight: 500; line-height: 1.42; }
+.home-access-price-note { margin: 11px 0 0; color: var(--muted); font-size: 11px !important; line-height: 1.5 !important; }
 .traveler-testimonials { position: relative; overflow: hidden; padding: clamp(46px, 6vw, 78px) clamp(22px, 5vw, 72px); border: 1px solid var(--line); border-radius: 32px; background: linear-gradient(135deg, #edf5fa 0%, #ffffff 52%, #e6f0f6 100%); }
 .traveler-testimonials::before, .traveler-testimonials::after { content: ""; position: absolute; border: 1px solid #aebfcb; border-radius: 50%; opacity: .35; pointer-events: none; }
 .traveler-testimonials::before { width: 440px; height: 440px; top: -295px; left: -175px; }
@@ -75,6 +84,7 @@
   .site-shell, .site-shell.page-0 { padding-top: 18px; }
   .home-flow { gap: 48px; }
   .home-enroll { flex-direction: column; align-items: stretch; padding: 24px; }
+  .home-access-benefits { grid-template-columns: 1fr; }
   .home-enroll .button { justify-content: center; }
   .traveler-testimonials { padding: 46px 18px; border-radius: 22px; }
   .traveler-testimonials-heading { text-align: left; }

@@ -2136,6 +2136,78 @@ const visualTranslationRows: TranslationRow[] = [
     "今すぐ始めたい",
     "我想现在开始",
   ],
+  [
+    "SEUS PRIVILÉGIOS",
+    "YOUR ACCESS BENEFITS",
+    "OS SEUS PRIVILÉGIOS",
+    "TUS BENEFICIOS DE ACCESO",
+    "アクセス特典",
+    "您的访问权益",
+  ],
+  [
+    "Pagamento único",
+    "One-time payment",
+    "Pagamento único",
+    "Pago único",
+    "一回限りのお支払い",
+    "一次性付款",
+  ],
+  [
+    "PAGAMENTO ÚNICO",
+    "ONE-TIME PAYMENT",
+    "PAGAMENTO ÚNICO",
+    "PAGO ÚNICO",
+    "一回限りのお支払い",
+    "一次性付款",
+  ],
+  [
+    "Você paga uma vez e garante seu acesso.",
+    "You pay once and secure your access.",
+    "Paga uma vez e garante o seu acesso.",
+    "Pagas una vez y aseguras tu acceso.",
+    "一度のお支払いでアクセスを確保できます。",
+    "一次付款即可获得访问权限。",
+  ],
+  [
+    "ACESSO COMPLETO",
+    "FULL ACCESS",
+    "ACESSO COMPLETO",
+    "ACCESO COMPLETO",
+    "完全アクセス",
+    "完整访问权限",
+  ],
+  [
+    "ATUALIZAÇÕES INCLUÍDAS",
+    "UPDATES INCLUDED",
+    "ATUALIZAÇÕES INCLUÍDAS",
+    "ACTUALIZACIONES INCLUIDAS",
+    "アップデート込み",
+    "包含更新",
+  ],
+  [
+    "Acesso completo às aulas e aos recursos da plataforma",
+    "Full access to the platform's classes and resources",
+    "Acesso completo às aulas e aos recursos da plataforma",
+    "Acceso completo a las clases y recursos de la plataforma",
+    "プラットフォームの授業とリソースへの完全アクセス",
+    "全面访问平台课程和资源",
+  ],
+  [
+    "Atualizações futuras incluídas, sem nova cobrança",
+    "Future updates included, with no new charge",
+    "Atualizações futuras incluídas, sem nova cobrança",
+    "Actualizaciones futuras incluidas, sin nuevos cargos",
+    "今後のアップデートも追加料金なしで含まれます",
+    "未来更新已包含，无需额外付费",
+  ],
+  [
+    "O valor atual pode mudar conforme novos módulos e atualizações forem adicionados.",
+    "The current price may change as new modules and updates are added.",
+    "O valor atual pode mudar à medida que forem adicionados novos módulos e atualizações.",
+    "El precio actual puede cambiar a medida que se añadan nuevos módulos y actualizaciones.",
+    "新しいモジュールや更新が追加されると、現在の価格は変更される場合があります。",
+    "随着新模块和更新的加入，当前价格可能会变化。",
+  ],
 ];
 
 visualTranslationRows.push(
@@ -9855,6 +9927,28 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
                 <span className="small-label">UMA JORNADA COMPLETA</span>
                 <h2>Comece sua jornada</h2>
                 <p>Aprenda no seu ritmo</p>
+                <div className="home-access-benefits-wrap">
+                  <span className="small-label home-access-benefits-label">
+                    SEUS PRIVILÉGIOS
+                  </span>
+                  <ul className="home-access-benefits">
+                    <li>
+                      <b>PAGAMENTO ÚNICO</b>
+                      <span>Você paga uma vez e garante seu acesso.</span>
+                    </li>
+                    <li>
+                      <b>ACESSO COMPLETO</b>
+                      <span>Acesso completo às aulas e aos recursos da plataforma</span>
+                    </li>
+                    <li>
+                      <b>ATUALIZAÇÕES INCLUÍDAS</b>
+                      <span>Atualizações futuras incluídas, sem nova cobrança</span>
+                    </li>
+                  </ul>
+                  <p className="home-access-price-note">
+                    O valor atual pode mudar conforme novos módulos e atualizações forem adicionados.
+                  </p>
+                </div>
               </div>
               <Link
                 href="/checkout"
