@@ -13,6 +13,9 @@
   --yellow-soft: #DDE9F3;
   --white: #FFFFFF;
   --green: #708090;
+  --amber: #D4A64A;
+  --amber-strong: #9B6B13;
+  --amber-soft: #F8E9BF;
   --shadow: 0 18px 50px #C8CDD2;
 }
 
@@ -158,7 +161,7 @@ button:disabled { cursor: not-allowed; opacity: .42; }
 .hero-level-card { display: grid; grid-template-columns: 34px minmax(0, 1fr); column-gap: 9px; min-width: 0; padding: 10px 11px; border: 1px solid #FFFFFF; border-radius: 13px; color: var(--ink); background: rgba(255,255,255,.96); box-shadow: 0 14px 28px rgba(48,48,48,.13); }
 .hero-level-icon { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 10px; color: var(--blue); background: #DDE9F3; }
 .hero-level-card small, .hero-level-card strong, .hero-level-card div > span { display: block; }.hero-level-card small { color: #708090; font-size: 7px; font-weight: 900; letter-spacing: .1em; }.hero-level-card strong { margin-top: 2px; font-size: 12px; letter-spacing: -.03em; }.hero-level-card div > span { margin-top: 2px; color: #708090; font-size: 8px; }
-.hero-level-progress { grid-column: 1 / -1; display: block; height: 4px; margin-top: 9px; overflow: hidden; border-radius: 999px; background: #DDE9F3; }.hero-level-progress i { display: block; height: 100%; border-radius: inherit; background: var(--yellow); transition: width 720ms var(--motion-ease-emphasized, ease); }
+.hero-level-progress { grid-column: 1 / -1; display: block; height: 4px; margin-top: 9px; overflow: hidden; border-radius: 999px; background: #DDE9F3; }.hero-level-progress i { display: block; height: 100%; border-radius: inherit; background: var(--amber); transition: width 720ms var(--motion-ease-emphasized, ease); }
 .hero-entrance { animation: hero-enter 760ms var(--motion-ease-emphasized, cubic-bezier(.16, 1, .3, 1)) both; }
 .hero-entrance--eyebrow { animation-delay: 70ms; }.hero-entrance--title { animation-delay: 150ms; }.hero-entrance--subtitle { animation-delay: 240ms; }.hero-entrance--actions { animation-delay: 330ms; }.hero-entrance--proof { animation-delay: 420ms; }
 @keyframes hero-enter { from { opacity: .01; transform: translate3d(0, 18px, 0); } to { opacity: 1; transform: translate3d(0, 0, 0); } }
@@ -819,3 +822,24 @@ button, input, select { font-family: Inter, Manrope, Arial, Helvetica, sans-seri
 
 /* [CONFORMIDADE] escolhas de cookies com recusa equivalente ao aceite. */
 .cookie-preferences-link { border: 0; padding: 0; color: inherit; background: transparent; font: inherit; cursor: pointer; text-decoration: underline; }.cookie-panel { position: fixed; z-index: 100; inset: auto 18px 18px; display: flex; justify-content: center; pointer-events: none; }.cookie-panel > div { width: min(100%, 650px); padding: 24px; border: 1px solid #b9cbd7; border-radius: 16px; background: #fff; box-shadow: 0 18px 55px rgba(38,56,72,.25); pointer-events: auto; }.cookie-panel h2 { margin: 6px 0; color: #233c55; font-size: 24px; }.cookie-panel p { margin: 0 0 16px; color: #52667a; font-size: 13px; line-height: 1.6; }.cookie-option { display: flex; gap: 9px; align-items: center; margin: 9px 0; color: #2d4d68; font-size: 13px; }.cookie-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }.cookie-actions .button { min-height: 44px; } @media(max-width: 600px) { .cookie-panel { inset: auto 10px 10px; }.cookie-panel > div { padding: 20px; }.cookie-actions .button { flex: 1; justify-content: center; } }
+
+/* Destaques exclusivos da jornada na página inicial. */
+.home-flow .hero-level-card { border-color: rgba(212, 166, 74, .42); box-shadow: 0 14px 28px rgba(155, 107, 19, .15); }
+.home-flow .hero-level-icon { color: var(--amber-strong); background: var(--amber-soft); }
+.home-concept .number-badge { color: var(--amber-strong); }
+.home-concept .journey-line > span:not(.journey-node) { background: rgba(212, 166, 74, .38); }
+.home-concept .journey-node { border-color: rgba(155, 107, 19, .58); background: #FFFFFF; }
+.home-concept .journey-node.active { border-color: var(--amber); background: var(--amber); box-shadow: 0 0 0 5px rgba(248, 233, 191, .8); }
+.home-concept .pillar-card { border-color: rgba(212, 166, 74, .32); background: linear-gradient(145deg, #FFFFFF 0%, #F8E9BF 100%); box-shadow: 0 10px 22px rgba(155, 107, 19, .08); transition: border-color 180ms ease, box-shadow 180ms ease, filter 180ms ease; }
+.home-concept .pillar-card::before { background: rgba(255, 255, 255, .82); }
+.home-concept .pillar-card:nth-child(2n) { background: linear-gradient(145deg, #FDF7E8 0%, #FFFFFF 100%); }
+.home-concept .pillar-icon { color: var(--amber-strong); background: #FFFFFF; box-shadow: 0 6px 14px rgba(155, 107, 19, .12); }
+.home-concept .pillar-number, .home-concept .pillar-arrow, .home-concept .concept-note svg { color: var(--amber-strong); }
+.home-concept .pillar-card:hover { border-color: var(--amber); box-shadow: 0 15px 30px rgba(155, 107, 19, .18); filter: saturate(1.04); }
+.home-concept .pillar-card:active { filter: saturate(1.08); }
+.home-flow .home-enroll .button-primary { color: #303030; background: var(--amber); box-shadow: 0 9px 20px rgba(155, 107, 19, .24); }
+.home-flow .home-enroll .button-primary:hover { background: #E0B45D; box-shadow: 0 12px 25px rgba(155, 107, 19, .3); }
+
+@media (prefers-reduced-motion: reduce) {
+  .home-concept .pillar-card { transition: none; }
+}

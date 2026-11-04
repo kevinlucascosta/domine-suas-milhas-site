@@ -6624,7 +6624,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
     </div>
   );
 
-  const renderConcept = () => {
+  const renderConcept = (homeAccent = false) => {
     const pillars = [
       {
         icon: "book" as IconName,
@@ -6653,7 +6653,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
     ];
     return (
       <>
-        <div className="concept-layout">
+        <div className={`concept-layout${homeAccent ? " home-concept" : ""}`}>
           <div className="concept-intro">
             <span className="number-badge">01 — 04</span>
             <h3>
@@ -9746,7 +9746,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
                 <h2>{copy.slides[1].title}</h2>
                 <p>{copy.slides[1].description}</p>
               </div>
-              {renderConcept()}
+              {renderConcept(true)}
             </section>
             <section
               className="travel-memories hero-scroll-reveal home-reveal"
