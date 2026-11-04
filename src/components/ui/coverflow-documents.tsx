@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent, type TouchEvent } from "react";
+import { useRef, useState, type KeyboardEvent, type TouchEvent } from "react";
 
 export type TravelDocument = {
   tag: string;
@@ -39,8 +39,6 @@ function FileIcon() {
 
 export default function CoverflowDocuments({ items, title = "Documentos de viagem", description = "Exemplos reais de emissões, roteiros e vouchers para explorar durante a aula.", onConfirm, translate = (value) => value }: CoverflowDocumentsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [userPaused, setUserPaused] = useState(false);
   const touchStart = useRef<number | null>(null);
 
   const count = items.length;
@@ -57,13 +55,6 @@ export default function CoverflowDocuments({ items, title = "Documentos de viage
     }
     window.open(item.pdfUrl, "_blank", "noopener,noreferrer");
   };
-
-  useEffect(() => {
-    if (isPaused || userPaused || count < 2) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const timer = window.setInterval(() => setActiveIndex((current) => (current + 1) % count), 6000);
-    return () => window.clearInterval(timer);
-  }, [count, isPaused, userPaused]);
 
   const onTouchStart = (event: TouchEvent<HTMLDivElement>) => {
     touchStart.current = event.touches[0]?.clientX ?? null;
@@ -85,7 +76,7 @@ export default function CoverflowDocuments({ items, title = "Documentos de viage
   };
 
   return (
-    <section className="coverflow-documents" aria-label={translate(title)} onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)} onFocus={() => setIsPaused(true)} onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setIsPaused(false); }} onKeyDown={(event) => { if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); move(event.key === "ArrowLeft" ? -1 : 1); } }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+    <section className="coverflow-documents" aria-label={translate(title)} onKeyDown={(event) => { if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); move(event.key === "ArrowLeft" ? -1 : 1); } }} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <div className="coverflow-heading">
         <div>
           <span className="coverflow-kicker">{translate("MATERIAIS DE EXEMPLO")}</span>
