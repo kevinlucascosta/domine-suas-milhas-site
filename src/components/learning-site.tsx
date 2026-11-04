@@ -13,6 +13,7 @@ import {
   type ReactNode,
   type TouchEvent,
 } from "react";
+import { flushSync } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -4768,6 +4769,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   const [guardianAuthorizationConfirmed, setGuardianAuthorizationConfirmed] =
     useState(false);
   const [authBusy, setAuthBusy] = useState(false);
+  const authRequestInFlightRef = useRef(false);
   const [signingOut, setSigningOut] = useState(false);
   const [authenticatedUser, setAuthenticatedUser] = useState<User | null>(null);
   const [courseAccessStatus, setCourseAccessStatus] =
@@ -6061,6 +6063,8 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   };
 
   const handleAccountAccess = async () => {
+    if (authRequestInFlightRef.current) return;
+
     if (
       authMode === "signup" &&
       !canContinueWithGuardianAuthorization(guardianAuthorizationConfirmed)
@@ -6084,7 +6088,8 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
       return;
     }
 
-    setAuthBusy(true);
+    authRequestInFlightRef.current = true;
+    flushSync(() => setAuthBusy(true));
     try {
       const supabase = createSupabaseClient();
       const result =
@@ -6129,6 +6134,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
           : "Não foi possível acessar sua conta agora.",
       );
     } finally {
+      authRequestInFlightRef.current = false;
       setAuthBusy(false);
     }
   };
