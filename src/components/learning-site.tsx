@@ -5401,8 +5401,8 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
     if (!hasSupabaseBrowserConfig()) return;
     const supabase = createSupabaseClient();
     void supabase.auth
-      .getUser()
-      .then(({ data }) => setAuthenticatedUser(data.user ?? null));
+      .getSession()
+      .then(({ data }) => setAuthenticatedUser(data.session?.user ?? null));
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
