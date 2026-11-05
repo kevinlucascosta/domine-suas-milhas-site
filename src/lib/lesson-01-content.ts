@@ -17,7 +17,7 @@ export const lesson01Documents: TravelDocument[] = [
     subtitle: "AULA 01 · MATERIAL DE APOIO",
     subject: "Milhas, pontos e milheiro",
     img: "/lesson-01/o-que-sao-milhas-capa.png",
-    pdfUrl: "/lesson-01/o-que-sao-milhas.pdf",
+    pdfUrl: "/api/material/o-que-sao-milhas",
     fileName: "o-que-sao-milhas.pdf",
   },
   {
@@ -26,7 +26,7 @@ export const lesson01Documents: TravelDocument[] = [
     subtitle: "AULA 01 · MATERIAL DE APOIO",
     subject: "Programas das companhias aéreas",
     img: "/lesson-01/programas-de-fidelidade-capa.png",
-    pdfUrl: "/lesson-01/programas-de-fidelidade.pdf",
+    pdfUrl: "/api/material/programas-de-fidelidade",
     fileName: "programas-de-fidelidade.pdf",
   },
 ];

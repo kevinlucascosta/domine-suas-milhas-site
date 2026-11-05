@@ -30,14 +30,18 @@ export async function GET(
   }
 
   const supabase = await createServerSupabaseClient();
-  const { data: claims } = await supabase.auth.getClaims();
+  const { data: claims, error: claimsError } = await supabase.auth.getClaims();
+  if (claimsError) {
+    return NextResponse.json({ error: "authentication_unavailable" }, { status: 503 });
+  }
+
   const userId = claims?.claims.sub;
 
   if (!userId) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
 
-  const { data: entitlement } = await supabase
+  const { data: entitlement, error: entitlementError } = await supabase
     .from("entitlements")
     .select("id")
     .eq("user_id", userId)
@@ -45,6 +49,10 @@ export async function GET(
     .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`)
     .limit(1)
     .maybeSingle();
+
+  if (entitlementError) {
+    return NextResponse.json({ error: "access_check_unavailable" }, { status: 503 });
+  }
 
   if (!entitlement) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });
