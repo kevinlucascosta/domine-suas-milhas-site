@@ -41,7 +41,7 @@ export default function StudyDocumentReader({ documentKey }: { documentKey: Docu
   }, []);
   const t = copy[language];
   const isMiles = documentKey === "o-que-sao-milhas";
-  const originalPdf = isMiles ? "/lesson-01/o-que-sao-milhas.pdf" : "/lesson-01/programas-de-fidelidade.pdf";
+  const originalPdf = `/api/material/${documentKey}`;
   const title = isMiles ? t.miles : t.programs;
   const priceRows = [["GOL", 13, 15], ["Azul", 14, 18], ["LATAM", 22, 25], ["Iberia, British e Qatar", 0, 55], ["TAP", 0, 35]];
 

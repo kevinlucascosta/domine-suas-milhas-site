@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 const protectedPrefixes = [
   "/curso", "/aula", "/ferramentas", "/comparador", "/missoes",
-  "/quiz", "/projeto-final", "/progresso", "/perfil", "/certificado",
+  "/quiz", "/projeto-final", "/progresso", "/perfil", "/certificado", "/material",
 ];
 
 export async function updateSession(request: NextRequest) {
