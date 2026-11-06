@@ -6133,6 +6133,9 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
           ? await supabase.auth.signUp({
               email: authEmail,
               password: authPassword,
+              options: {
+                emailRedirectTo: `${window.location.origin}/auth/callback`,
+              },
             })
           : await supabase.auth.signInWithPassword({
               email: authEmail,

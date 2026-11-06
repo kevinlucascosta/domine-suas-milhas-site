@@ -44,3 +44,22 @@ test("as páginas do curso verificam acesso antes de buscar as perguntas", () =>
   );
   assert.match(learningSite, /if \(!courseAccessSlideIndexes\.has\(slide\)\) return;/);
 });
+
+test("o cadastro confirma e-mail no callback e mantém a recuperação separada", () => {
+  const learningSite = readFileSync(learningSitePath, "utf8");
+  const signup = learningSite.match(/supabase\.auth\.signUp\(([\s\S]*?)\}\)/)?.[1];
+  const recovery = learningSite.match(
+    /supabase\.auth\.resetPasswordForEmail\(([\s\S]*?)\n\s*\);/,
+  )?.[1];
+
+  assert.ok(signup, "a chamada de cadastro deve existir");
+  assert.ok(recovery, "a chamada de recuperação deve existir");
+  assert.match(
+    signup,
+    /options:\s*\{\s*emailRedirectTo:\s*`\$\{window\.location\.origin\}\/auth\/callback`/,
+  );
+  assert.match(
+    recovery,
+    /redirectTo:\s*`\$\{window\.location\.origin\}\/auth\/recovery`/,
+  );
+});
