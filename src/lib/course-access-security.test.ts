@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 import { resolve } from "node:path";
 
@@ -62,4 +62,50 @@ test("o cadastro confirma e-mail no callback e mantém a recuperação separada"
     recovery,
     /redirectTo:\s*`\$\{window\.location\.origin\}\/auth\/recovery`/,
   );
+});
+
+test("a missão de perfil preserva conclusões e valida somente uma nova conclusão", () => {
+  const migrationPath = resolve(
+    process.cwd(),
+    "supabase/migrations/20261106190000_validate_profile_completion_mission.sql",
+  );
+  assert.ok(existsSync(migrationPath), "a migration de validação deve existir");
+  const migration = readFileSync(migrationPath, "utf8");
+
+  assert.match(
+    migration,
+    /create or replace function public\.complete_learning_mission\(p_mission_key text\)\s+returns table \(mission_key text, xp_earned smallint, completed_at timestamptz, newly_completed boolean\)/i,
+  );
+  assert.match(migration, /security definer\s+set search_path = ''/i);
+  assert.match(migration, /v_user_id uuid := auth\.uid\(\)/i);
+  assert.match(migration, /if v_user_id is null then\s+raise exception 'not_authenticated'/i);
+
+  const priorCompletion = migration.match(
+    /select completion\.xp_earned, completion\.completed_at\s+into v_xp, v_completed_at\s+from public\.learning_mission_completions as completion\s+where completion\.user_id = v_user_id and completion\.mission_key = p_mission_key;\s+if found then\s+return query select p_mission_key, v_xp, v_completed_at, false;\s+return;\s+end if;/i,
+  );
+  const profileGuard = migration.match(
+    /if p_mission_key = 'profile_complete' and not exists\s*\(([\s\S]*?)\) then\s+raise exception 'profile_incomplete';\s+end if;/i,
+  );
+  assert.ok(priorCompletion, "a conclusão do próprio aluno deve retornar sem nova validação");
+  assert.ok(profileGuard, "a validação deve bloquear apenas uma nova profile_complete");
+  assert.ok(priorCompletion.index! < profileGuard.index!);
+  assert.ok(profileGuard.index! < migration.indexOf("insert into public.learning_mission_completions"));
+  assert.match(profileGuard[1], /from public\.student_profiles as profile/i);
+  assert.match(profileGuard[1], /profile\.user_id = v_user_id/i);
+  assert.match(profileGuard[1], /char_length\(trim\(profile\.display_name\)\) >= 2/i);
+  assert.match(profileGuard[1], /char_length\(trim\(profile\.full_name\)\) >= 2/i);
+  assert.match(profileGuard[1], /coalesce\(trim\(profile\.country\), ''\) <> ''/i);
+  assert.match(profileGuard[1], /coalesce\(cardinality\(profile\.favorite_programs\), 0\) > 0/i);
+
+  assert.match(
+    migration,
+    /when 'profile_complete' then 20\s+when 'lesson_01_complete' then 50\s+when 'quiz_module_01_complete' then 150\s+when 'simulator_used' then 100\s+else null/i,
+  );
+  assert.match(migration, /raise exception 'unsupported_mission'/i);
+  assert.match(migration, /on conflict[^;]+do nothing/i);
+  assert.match(migration, /v_new := found;/i);
+  assert.match(migration, /if not v_new then[\s\S]+completion\.user_id = v_user_id and completion\.mission_key = p_mission_key;/i);
+  assert.match(migration, /return query select p_mission_key, v_xp, v_completed_at, v_new;/i);
+  assert.match(migration, /revoke all on function public\.complete_learning_mission\(text\) from public, anon;/i);
+  assert.match(migration, /grant execute on function public\.complete_learning_mission\(text\) to authenticated;/i);
 });
