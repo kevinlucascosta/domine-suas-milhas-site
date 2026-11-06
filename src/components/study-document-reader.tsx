@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { canPersistPreferences } from "@/components/cookie-preferences";
 import { useEffect, useState } from "react";
 
 type Lang = "pt-BR" | "en" | "pt-PT" | "es" | "ja" | "zh";
@@ -36,6 +37,7 @@ const copy: Record<Lang, Record<string, string>> = {
 export default function StudyDocumentReader({ documentKey }: { documentKey: DocumentKey }) {
   const [language, setLanguage] = useState<Lang>("pt-BR");
   useEffect(() => {
+    if (!canPersistPreferences()) return;
     const saved = window.localStorage.getItem("domine-language") as Lang | null;
     if (saved && languages.some((item) => item.code === saved)) setLanguage(saved);
   }, []);
@@ -45,5 +47,5 @@ export default function StudyDocumentReader({ documentKey }: { documentKey: Docu
   const title = isMiles ? t.miles : t.programs;
   const priceRows = [["GOL", 13, 15], ["Azul", 14, 18], ["LATAM", 22, 25], ["Iberia, British e Qatar", 0, 55], ["TAP", 0, 35]];
 
-  return <main className="study-reader"><header className="study-reader-header"><Link href="/aula" className="study-reader-back">← {t.back}</Link><label>{t.reader}<select value={language} onChange={(event) => { const next = event.target.value as Lang; setLanguage(next); window.localStorage.setItem("domine-language", next); }} aria-label={t.reader}>{languages.map((item) => <option key={item.code} value={item.code}>{item.label}</option>)}</select></label></header><article className="study-reader-paper"><span>{t.material}</span><h1>{title}</h1>{isMiles ? <><h2>{t.welcome}</h2><p>{t.intro}</p><section><h2>{t.miles}</h2><p>{t.milesBody}</p></section><section><h2>{t.points}</h2><p>{t.pointsBody}</p></section><section><h2>{t.thousand}</h2><p>{t.thousandBody}</p></section><section><h2>{t.prices}</h2><div className="study-price-grid">{priceRows.map(([name, min, max]) => <div key={String(name)}><b>{name}</b><span>{min ? `${money[language](Number(min))} – ` : ""}{money[language](Number(max))}</span></div>)}</div></section></> : <><p>{t.programsBody}</p><section><h2>{t.companies}</h2><div className="study-programs"><b>Smiles — GOL</b><b>TudoAzul — Azul</b><b>LATAM Pass — LATAM</b><b>Iberia Plus — Iberia</b><b>Qatar Airways — Qatar</b></div></section><section><h2>{t.register}</h2><p>{t.registerBody}</p></section></>}<footer><p>{t.source}</p><a href={originalPdf} target="_blank" rel="noreferrer">{t.original} ↗</a></footer></article></main>;
+  return <main className="study-reader"><header className="study-reader-header"><Link href="/aula" className="study-reader-back">← {t.back}</Link><label>{t.reader}<select value={language} onChange={(event) => { const next = event.target.value as Lang; setLanguage(next); if (canPersistPreferences()) window.localStorage.setItem("domine-language", next); }} aria-label={t.reader}>{languages.map((item) => <option key={item.code} value={item.code}>{item.label}</option>)}</select></label></header><article className="study-reader-paper"><span>{t.material}</span><h1>{title}</h1>{isMiles ? <><h2>{t.welcome}</h2><p>{t.intro}</p><section><h2>{t.miles}</h2><p>{t.milesBody}</p></section><section><h2>{t.points}</h2><p>{t.pointsBody}</p></section><section><h2>{t.thousand}</h2><p>{t.thousandBody}</p></section><section><h2>{t.prices}</h2><div className="study-price-grid">{priceRows.map(([name, min, max]) => <div key={String(name)}><b>{name}</b><span>{min ? `${money[language](Number(min))} – ` : ""}{money[language](Number(max))}</span></div>)}</div></section></> : <><p>{t.programsBody}</p><section><h2>{t.companies}</h2><div className="study-programs"><b>Smiles — GOL</b><b>TudoAzul — Azul</b><b>LATAM Pass — LATAM</b><b>Iberia Plus — Iberia</b><b>Qatar Airways — Qatar</b></div></section><section><h2>{t.register}</h2><p>{t.registerBody}</p></section></>}<footer><p>{t.source}</p><a href={originalPdf} target="_blank" rel="noreferrer">{t.original} ↗</a></footer></article></main>;
 }

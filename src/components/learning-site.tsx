@@ -27,17 +27,11 @@ import { copyAdditions } from "@/lib/copy-additions";
 import { lesson01TranslationRows } from "@/lib/lesson-01-translations";
 import { courseMissionCopy } from "@/lib/course-missions-translations";
 import { siteAuditTranslationRows } from "@/lib/site-audit-translations";
-import {
-  lesson01QuestionTranslations,
-  lessonQuestionUi,
-} from "@/lib/lesson-01-question-translations";
+import { lessonQuestionUi } from "@/lib/lesson-01-question-ui";
 import CoverflowDocuments from "@/components/ui/coverflow-documents";
-import { CookiePreferences, CookiePreferencesLink } from "@/components/cookie-preferences";
+import { canPersistPreferences, CookiePreferences, CookiePreferencesLink } from "@/components/cookie-preferences";
 import {
-  lesson01ChallengeQuestions,
   lesson01Documents,
-  lesson01ReviewQuestions,
-  type LessonQuestion,
 } from "@/lib/lesson-01-content";
 import { getLevelProgress } from "@/lib/level-system";
 import { canContinueWithGuardianAuthorization } from "@/lib/guardian-authorization";
@@ -140,7 +134,9 @@ function getGoogleProfileImage(user: User | null) {
       .find((url): url is string => Boolean(url)) ?? null
   );
 }
+
 function readLanguage(): Lang {
+  if (!canPersistPreferences()) return "pt-BR";
   try {
     const saved = localStorage.getItem("domine-language");
     return (
@@ -4692,10 +4688,19 @@ type LessonQuestionAttempt = {
 };
 type LessonQuizXpEntry = { id: string; amount: number; awardedAt: number };
 type LessonQuestionMode = "review" | "challenge";
+type LessonQuestion = {
+  id: string;
+  documentId: string;
+  prompt: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+};
 type MissionView = "map" | "all" | "in-progress" | "completed";
 
 const LESSON_QUIZ_ATTEMPTS_KEY = "domine-lesson-01-question-attempts";
 const LESSON_QUIZ_XP_KEY = "domine-lesson-01-question-xp";
+const courseAccessSlideIndexes = new Set([3, 5, 6, 9, 10, 12]);
 
 const siteNotice: Record<
   Lang,
@@ -4756,11 +4761,13 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
     serverScrollPosition,
   );
   const showScrollToTop = slide === 0 && scrollPosition > 520;
-  const language = useSyncExternalStore(
+  const storedLanguage = useSyncExternalStore(
     subscribeLanguage,
     readLanguage,
     serverLanguage,
   );
+  const [sessionLanguage, setSessionLanguage] = useState<Lang | null>(null);
+  const language = sessionLanguage ?? storedLanguage;
   const [languageOpen, setLanguageOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"login" | "signup">("signup");
   const [authEmail, setAuthEmail] = useState("");
@@ -4811,6 +4818,10 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   const [quizRetrySeconds, setQuizRetrySeconds] = useState(0);
   const [lessonQuestionMode, setLessonQuestionMode] =
     useState<LessonQuestionMode>("review");
+  const [lessonQuestions, setLessonQuestions] = useState<{
+    review: LessonQuestion[];
+    challenge: LessonQuestion[];
+  }>({ review: [], challenge: [] });
   const [lessonQuestionAttempts, setLessonQuestionAttempts] = useState<
     LessonQuestionAttempt[]
   >([]);
@@ -4941,6 +4952,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
     };
   }, [slide]);
   useEffect(() => {
+    if (courseAccessStatus !== "granted") return;
     try {
       const savedAttempts = JSON.parse(
         window.localStorage.getItem(LESSON_QUIZ_ATTEMPTS_KEY) ?? "[]",
@@ -4964,9 +4976,9 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
     } finally {
       setLessonQuizLoaded(true);
     }
-  }, []);
+  }, [courseAccessStatus]);
   useEffect(() => {
-    if (!lessonQuizLoaded) return;
+    if (!lessonQuizLoaded || courseAccessStatus !== "granted") return;
     window.localStorage.setItem(
       LESSON_QUIZ_ATTEMPTS_KEY,
       JSON.stringify(lessonQuestionAttempts),
@@ -4975,7 +4987,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
       LESSON_QUIZ_XP_KEY,
       JSON.stringify(lessonQuizXpEntries),
     );
-  }, [lessonQuestionAttempts, lessonQuizLoaded, lessonQuizXpEntries]);
+  }, [courseAccessStatus, lessonQuestionAttempts, lessonQuizLoaded, lessonQuizXpEntries]);
   useEffect(() => {
     if (!authenticatedUser || !hasSupabaseBrowserConfig()) return;
     let active = true;
@@ -5436,9 +5448,30 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   };
 
   useEffect(() => {
-    if (slide !== 3) return;
+    if (!courseAccessSlideIndexes.has(slide)) return;
     void refreshCourseAccess();
   }, [slide, authenticatedUser?.id]);
+
+  useEffect(() => {
+    if (courseAccessStatus !== "granted") {
+      return;
+    }
+    let active = true;
+    void fetch(`/api/lesson-01/questions?language=${encodeURIComponent(language)}`)
+      .then(async (response) => {
+        if (!response.ok) throw new Error("lesson_questions_unavailable");
+        return response.json() as Promise<{ review: LessonQuestion[]; challenge: LessonQuestion[] }>;
+      })
+      .then((questions) => {
+        if (active) setLessonQuestions(questions);
+      })
+      .catch(() => {
+        if (active) setLessonQuestions({ review: [], challenge: [] });
+      });
+    return () => {
+      active = false;
+    };
+  }, [courseAccessStatus, language]);
 
   useEffect(() => {
     let active = true;
@@ -5758,12 +5791,15 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   }, [presentationAudioLanguage]);
 
   const selectLanguage = (code: Lang) => {
+    setSessionLanguage(code);
     try {
-      window.localStorage.setItem("domine-language", code);
+      if (canPersistPreferences()) {
+        window.localStorage.setItem("domine-language", code);
+      }
     } catch {
-      return;
+      // A escolha continua válida nesta sessão mesmo sem armazenamento local.
     }
-    if (authenticatedUser && studentProfile && hasSupabaseBrowserConfig()) {
+    if (canPersistPreferences() && authenticatedUser && studentProfile && hasSupabaseBrowserConfig()) {
       const supabase = createSupabaseClient();
       void supabase
         .from("student_profiles")
@@ -8124,7 +8160,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
       incomplete: "Responda todas as questões antes de confirmar.",
     };
     const questions =
-      mode === "review" ? lesson01ReviewQuestions : lesson01ChallengeQuestions;
+      mode === "review" ? lessonQuestions.review : lessonQuestions.challenge;
     const xpPerCorrect = mode === "review" ? 5 : 10;
     const attempts = questions.map((question) => ({
       question,
@@ -8197,19 +8233,14 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
             </div>
           )}
           {attempts.map(({ question, attempt }, questionIndex) => {
-            const translatedQuestion =
-              language === "pt-BR" || language === "pt-PT"
-                ? question
-                : lesson01QuestionTranslations[language]?.[question.id] ??
-                  question;
             const localizedQuestion = {
-              ...translatedQuestion,
-              prompt: localizeCurrencyText(translatedQuestion.prompt, language),
-              options: translatedQuestion.options.map((option) =>
+              ...question,
+              prompt: localizeCurrencyText(question.prompt, language),
+              options: question.options.map((option) =>
                 localizeCurrencyText(option, language),
               ),
               explanation: localizeCurrencyText(
-                translatedQuestion.explanation,
+                question.explanation,
                 language,
               ),
             };
@@ -8731,15 +8762,15 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
         destination: 7,
       },
     ];
-    const reviewAnswered = lesson01ReviewQuestions.filter((question) =>
+    const reviewAnswered = lessonQuestions.review.filter((question) =>
       getLessonQuestionAttempt(question.id),
     ).length;
-    const challengeAnswered = lesson01ChallengeQuestions.filter((question) =>
+    const challengeAnswered = lessonQuestions.challenge.filter((question) =>
       getLessonQuestionAttempt(question.id),
     ).length;
-    const reviewComplete = reviewAnswered === lesson01ReviewQuestions.length;
+    const reviewComplete = reviewAnswered === lessonQuestions.review.length;
     const challengeComplete =
-      challengeAnswered === lesson01ChallengeQuestions.length;
+      challengeAnswered === lessonQuestions.challenge.length;
     const courseMapItems = [
       {
         title: missionCopy.courseLessonTitle,
@@ -8773,7 +8804,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
             )
           : missions.filter((mission) => isMissionComplete(mission.key));
     const totalLessonQuestions =
-      lesson01ReviewQuestions.length + lesson01ChallengeQuestions.length;
+      lessonQuestions.review.length + lessonQuestions.challenge.length;
     const answeredLessonQuestions = reviewAnswered + challengeAnswered;
     return (
       <div className="missions-layout">
