@@ -92,8 +92,8 @@ test("a missão de perfil preserva conclusões e valida somente uma nova conclus
   assert.ok(profileGuard.index! < migration.indexOf("insert into public.learning_mission_completions"));
   assert.match(profileGuard[1], /from public\.student_profiles as profile/i);
   assert.match(profileGuard[1], /profile\.user_id = v_user_id/i);
-  assert.match(profileGuard[1], /char_length\(trim\(profile\.display_name\)\) >= 2/i);
-  assert.match(profileGuard[1], /char_length\(trim\(profile\.full_name\)\) >= 2/i);
+  assert.match(profileGuard[1], /char_length\(btrim\(profile\.display_name, v_profile_whitespace\)\) >= 2/i);
+  assert.match(profileGuard[1], /char_length\(btrim\(profile\.full_name, v_profile_whitespace\)\) >= 2/i);
   assert.match(profileGuard[1], /coalesce\(trim\(profile\.country\), ''\) <> ''/i);
   assert.match(profileGuard[1], /coalesce\(cardinality\(profile\.favorite_programs\), 0\) > 0/i);
 
@@ -108,4 +108,26 @@ test("a missão de perfil preserva conclusões e valida somente uma nova conclus
   assert.match(migration, /return query select p_mission_key, v_xp, v_completed_at, v_new;/i);
   assert.match(migration, /revoke all on function public\.complete_learning_mission\(text\) from public, anon;/i);
   assert.match(migration, /grant execute on function public\.complete_learning_mission\(text\) to authenticated;/i);
+});
+
+test("os nomes do perfil removem o mesmo whitespace ASCII e Unicode de String.trim", () => {
+  const migration = readFileSync(resolve(
+    process.cwd(),
+    "supabase/migrations/20261106190000_validate_profile_completion_mission.sql",
+  ), "utf8");
+  const whitespaceDeclaration = migration.match(
+    /v_profile_whitespace constant text := U&'([^']+)';/i,
+  );
+  assert.ok(whitespaceDeclaration, "a migration deve declarar o whitespace de String.trim");
+  const sqlWhitespace = whitespaceDeclaration[1].replace(
+    /\\([0-9a-f]{4})/gi,
+    (_, codePoint: string) => String.fromCodePoint(parseInt(codePoint, 16)),
+  );
+  const jsWhitespace = "\u0009\u000a\u000b\u000c\u000d\u0020\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u2028\u2029\u202f\u205f\u3000\ufeff";
+
+  assert.equal(sqlWhitespace, jsWhitespace);
+  for (const whitespaceOnlyName of ["\t\t", "\n\n", "\r\n", "\u00a0\u00a0", "\u2003\u2003", "\ufeff\ufeff", jsWhitespace]) {
+    assert.equal(whitespaceOnlyName.trim(), "");
+    assert.ok([...whitespaceOnlyName].every((character) => sqlWhitespace.includes(character)));
+  }
 });

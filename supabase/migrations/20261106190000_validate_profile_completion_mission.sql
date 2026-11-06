@@ -8,6 +8,8 @@ set search_path = ''
 as $$
 declare
   v_user_id uuid := auth.uid();
+  -- Match String.trim() without depending on the database locale's whitespace.
+  v_profile_whitespace constant text := U&'\0009\000A\000B\000C\000D\0020\00A0\1680\2000\2001\2002\2003\2004\2005\2006\2007\2008\2009\200A\2028\2029\202F\205F\3000\FEFF';
   v_xp smallint;
   v_completed_at timestamptz;
   v_new boolean := false;
@@ -42,8 +44,8 @@ begin
     select 1
     from public.student_profiles as profile
     where profile.user_id = v_user_id
-      and char_length(trim(profile.display_name)) >= 2
-      and char_length(trim(profile.full_name)) >= 2
+      and char_length(btrim(profile.display_name, v_profile_whitespace)) >= 2
+      and char_length(btrim(profile.full_name, v_profile_whitespace)) >= 2
       and coalesce(trim(profile.country), '') <> ''
       and coalesce(cardinality(profile.favorite_programs), 0) > 0
   ) then
