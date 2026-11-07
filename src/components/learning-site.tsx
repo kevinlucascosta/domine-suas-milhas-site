@@ -4,6 +4,7 @@ import {
   Children,
   cloneElement,
   isValidElement,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -34,6 +35,7 @@ import {
   lesson01Documents,
 } from "@/lib/lesson-01-content";
 import { getLevelProgress } from "@/lib/level-system";
+import { parseQuizSubmission, QuizRequestGuard } from "@/lib/quiz-submission";
 import { canContinueWithGuardianAuthorization } from "@/lib/guardian-authorization";
 import {
   isLessonQuestionLocked,
@@ -4816,6 +4818,20 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   const [missionsLoaded, setMissionsLoaded] = useState(false);
   const [quizAnswer, setQuizAnswer] = useState<number | null>(null);
   const [quizRetrySeconds, setQuizRetrySeconds] = useState(0);
+  const [quizSubmitting, setQuizSubmitting] = useState(false);
+  const quizSubmissionInFlight = useRef(false);
+  const quizLockRequestGeneration = useRef(0);
+  const quizRequestGuard = useRef(new QuizRequestGuard());
+  const updateAuthenticatedUser = useCallback((user: User | null) => {
+    if (quizRequestGuard.current.setUser(user?.id ?? null)) {
+      quizLockRequestGeneration.current += 1;
+      quizSubmissionInFlight.current = false;
+      setQuizSubmitting(false);
+      setQuizAnswer(null);
+      setQuizRetrySeconds(0);
+    }
+    setAuthenticatedUser(user);
+  }, []);
   const [lessonQuestionMode, setLessonQuestionMode] =
     useState<LessonQuestionMode>("review");
   const [lessonQuestions, setLessonQuestions] = useState<{
@@ -5412,16 +5428,21 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
   useEffect(() => {
     if (!hasSupabaseBrowserConfig()) return;
     const supabase = createSupabaseClient();
+    let active = true;
+    let receivedAuthEvent = false;
     void supabase.auth
       .getSession()
-      .then(({ data }) => setAuthenticatedUser(data.session?.user ?? null));
+      .then(({ data }) => {
+        if (active && !receivedAuthEvent) updateAuthenticatedUser(data.session?.user ?? null);
+      });
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setAuthenticatedUser(session?.user ?? null);
+      receivedAuthEvent = true;
+      updateAuthenticatedUser(session?.user ?? null);
     });
-    return () => subscription.unsubscribe();
-  }, []);
+    return () => { active = false; subscription.unsubscribe(); };
+  }, [updateAuthenticatedUser]);
 
   const refreshCourseAccess = async () => {
     if (!authenticatedUser) {
@@ -5581,6 +5602,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
 
   useEffect(() => {
     let active = true;
+    const generation = quizLockRequestGeneration.current;
     if (!authenticatedUser || !hasSupabaseBrowserConfig()) {
       setQuizRetrySeconds(0);
       return () => {
@@ -5598,7 +5620,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
       .limit(1)
       .maybeSingle()
       .then(({ data, error }) => {
-        if (!active) return;
+        if (!active || generation !== quizLockRequestGeneration.current) return;
         if (error) {
           console.warn("Could not load quiz retry lock", error);
           return;
@@ -5835,29 +5857,46 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
 
   const completeMission = async (
     missionKey: MissionKey,
-    options?: { silent?: boolean },
+    options?: { silent?: boolean; selectedQuizAnswer?: number; isQuizRequestCurrent?: () => boolean },
   ) => {
     if (!authenticatedUser || !hasSupabaseBrowserConfig()) {
       router.push("/cadastro?next=%2Fmissoes");
       return false;
     }
 
-    const supabase = createSupabaseClient();
-    const { data, error } = await supabase.rpc("complete_learning_mission", {
-      p_mission_key: missionKey,
-    });
-
-    if (error) {
+    let completion: (MissionCompletion & { newly_completed: boolean }) | undefined;
+    try {
+      const supabase = createSupabaseClient();
+      if (missionKey === "quiz_module_01_complete") {
+        if (options?.selectedQuizAnswer === undefined) throw new Error("quiz_answer_required");
+        const { data, error } = await supabase.rpc("submit_module_01_quiz_answer", {
+          p_selected_index: options.selectedQuizAnswer,
+          p_finalize: true,
+        });
+        if (options?.isQuizRequestCurrent && !options.isQuizRequestCurrent()) return false;
+        quizLockRequestGeneration.current += 1;
+        if (error) throw error;
+        const result = parseQuizSubmission(data);
+        if (result.retryAfterSeconds > 0) {
+          setQuizRetrySeconds(result.retryAfterSeconds);
+          setQuizAnswer(null);
+          notify("Sua tentativa está bloqueada. Aguarde para tentar novamente.");
+          return false;
+        }
+        completion = result.completion ?? undefined;
+      } else {
+        const { data, error } = await supabase.rpc("complete_learning_mission", {
+          p_mission_key: missionKey,
+        });
+        if (error) throw error;
+        completion = (Array.isArray(data) ? data[0] : data) as
+          | (MissionCompletion & { newly_completed: boolean })
+          | undefined;
+      }
+      if (!completion) throw new Error("mission_completion_unavailable");
+    } catch (error) {
+      if (options?.isQuizRequestCurrent && !options.isQuizRequestCurrent()) return false;
       console.warn("Could not complete mission", error);
-      if (!options?.silent)
-        notify(
-          "Não foi possível registrar esta missão agora. Tente novamente.",
-        );
-      return false;
-    }
-
-    const completion = Array.isArray(data) ? data[0] : data;
-    if (!completion) {
       if (!options?.silent)
         notify(
           "Não foi possível registrar esta missão agora. Tente novamente.",
@@ -6075,7 +6114,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
         data: { ...authenticatedUser.user_metadata, avatar_preference: source },
       });
       if (error) throw error;
-      if (data.user) setAuthenticatedUser(data.user);
+      if (data.user) updateAuthenticatedUser(data.user);
       notify(
         source === "google"
           ? "A foto da sua conta Google agora é a principal."
@@ -8986,26 +9025,47 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
     const retryLocked = quizRetrySeconds > 0;
     const retryClock = `${String(Math.floor(quizRetrySeconds / 3600)).padStart(2, "0")}:${String(Math.floor((quizRetrySeconds % 3600) / 60)).padStart(2, "0")}:${String(quizRetrySeconds % 60).padStart(2, "0")}`;
     const selectQuizAnswer = async (index: number) => {
-      if (retryLocked) return;
-      setQuizAnswer(index);
-      if (index !== 1) {
-        const lockedUntil = new Date(
-          Date.now() + 24 * 60 * 60 * 1000,
-        ).toISOString();
-        setQuizRetrySeconds(24 * 60 * 60);
-        if (authenticatedUser && hasSupabaseBrowserConfig()) {
-          const { error } = await createSupabaseClient()
-            .from("quiz_attempt_locks")
-            .insert({
-              user_id: authenticatedUser.id,
-              quiz_key: "module_01_question_01",
-              locked_until: lockedUntil,
-            });
-          if (error) console.warn("Could not store quiz retry lock", error);
+      if (retryLocked || quizSubmissionInFlight.current) return;
+      if (!authenticatedUser || !hasSupabaseBrowserConfig()) {
+        router.push("/cadastro?next=%2Fmissoes");
+        return;
+      }
+      const request = quizRequestGuard.current.begin(authenticatedUser.id);
+      if (!request) return;
+      quizSubmissionInFlight.current = true;
+      quizLockRequestGeneration.current += 1;
+      setQuizSubmitting(true);
+      try {
+        const { data, error } = await createSupabaseClient().rpc("submit_module_01_quiz_answer", {
+          p_selected_index: index,
+          p_finalize: false,
+        });
+        if (!quizRequestGuard.current.isCurrent(request)) return;
+        quizLockRequestGeneration.current += 1;
+        if (error) throw error;
+        const result = parseQuizSubmission(data);
+        if (result.retryAfterSeconds > 0) {
+          setQuizRetrySeconds(result.retryAfterSeconds);
+          setQuizAnswer(result.attemptRecorded ? index : null);
+        } else if (result.correct && index === 1) {
+          setQuizAnswer(index);
+        } else {
+          throw new Error("invalid_quiz_response");
+        }
+      } catch (error) {
+        if (!quizRequestGuard.current.isCurrent(request)) return;
+        console.warn("Could not verify quiz answer", error);
+        setQuizAnswer(null);
+        notify("Não foi possível verificar sua resposta agora. Tente novamente.");
+      } finally {
+        if (quizRequestGuard.current.isCurrent(request)) {
+          quizSubmissionInFlight.current = false;
+          setQuizSubmitting(false);
         }
       }
     };
     const finishQuiz = () => {
+      if (quizSubmissionInFlight.current) return;
       if (retryLocked) {
         notify(`Aguarde ${retryClock} para fazer uma nova tentativa.`);
         return;
@@ -9014,7 +9074,18 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
         notify("Escolha a resposta correta para concluir o quiz.");
         return;
       }
-      void completeMission("quiz_module_01_complete");
+      if (!authenticatedUser) return;
+      const request = quizRequestGuard.current.begin(authenticatedUser.id);
+      if (!request) return;
+      quizSubmissionInFlight.current = true;
+      quizLockRequestGeneration.current += 1;
+      setQuizSubmitting(true);
+      void completeMission("quiz_module_01_complete", { selectedQuizAnswer: quizAnswer, isQuizRequestCurrent: () => quizRequestGuard.current.isCurrent(request) }).finally(() => {
+        if (quizRequestGuard.current.isCurrent(request)) {
+          quizSubmissionInFlight.current = false;
+          setQuizSubmitting(false);
+        }
+      });
     };
     return (
       <div className="quiz-layout">
@@ -9026,7 +9097,9 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
             </b>
           </div>
           <span>
-            {isMissionComplete("quiz_module_01_complete")
+            {quizSubmitting
+              ? "Verificando resposta..."
+              : isMissionComplete("quiz_module_01_complete")
               ? "Concluído"
               : retryLocked
                 ? `Nova tentativa em ${retryClock}`
@@ -9060,7 +9133,7 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
               {options.map((option, index) => (
                 <button
                   key={option}
-                  disabled={retryLocked}
+                  disabled={retryLocked || quizSubmitting}
                   className={`quiz-option ${quizAnswer === index ? (index === 1 ? "correct" : "wrong") : ""}`}
                   onClick={() => void selectQuizAnswer(index)}
                 >
@@ -9101,12 +9174,12 @@ export default function LearningSite({ pageIndex }: { pageIndex: number }) {
             <div className="quiz-actions">
               <button
                 className="text-button"
-                disabled={retryLocked}
+                disabled={retryLocked || quizSubmitting}
                 onClick={() => setQuizAnswer(null)}
               >
                 Limpar resposta
               </button>
-              <button className="button button-primary" onClick={finishQuiz}>
+              <button className="button button-primary" disabled={quizSubmitting} onClick={finishQuiz}>
                 {isMissionComplete("quiz_module_01_complete")
                   ? "Quiz concluído"
                   : retryLocked
