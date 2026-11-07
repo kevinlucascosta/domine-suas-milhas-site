@@ -1,6 +1,6 @@
 # Verificação do quiz e da transição — 7 de novembro de 2026
 
-Branch: `security/audit-remediation`. Trabalho local, sem aplicação de migrations ou publicação durante esta etapa. Backup do código anteriormente confirmado em produção: tag `backup/pre-transicao-quiz-dad9fd8`.
+Branch: `security/audit-remediation`. Sem aplicação de migrations ou publicação durante esta etapa. Backup do código anteriormente confirmado em produção: tag `backup/pre-transicao-quiz-dad9fd8`.
 
 ## Resultado dos três pontos
 
@@ -53,3 +53,11 @@ A integração comprovada é SDK → HTTP local → PostgREST → JWT/roles → 
 Durante a etapa aditiva e após rollback do corte, o caminho legado de XP continua permissivo. O corte final requer atualização de abas antigas. A recuperação por SQL preserva dados, mas reabre temporariamente essa permissão legada.
 
 Os servidores locais são encerrados ao final; os diretórios de diagnóstico contêm somente dados fictícios. PostgreSQL e PostgREST foram preparados fora das dependências do site e não foram instalados como serviços do Windows.
+
+## Validação hospedada e impedimento de execução
+
+Consultas somente de leitura confirmaram que a conta indicada pelo proprietário existe e tem entitlement ativo/não expirado. As colunas relevantes de acesso, perfis, XP e bloqueios foram conferidas sem exportar registros de alunos. O RPC novo ainda não existe no ambiente hospedado. Uma cópia das definições/ACL do RPC legado e da política de bloqueios foi guardada em `local-pg-test/hosted-pre-expand.json`, fora do projeto; não é backup completo dos dados.
+
+A tentativa de aplicar exclusivamente a etapa aditiva foi bloqueada pela revisão automática de permissões antes de executar a leitura encadeada ao comando de aplicação. Motivo informado: alteração de schema/permissões em produção exige aprovação explícita atual, considerando a instrução anterior de aguardar publicação. Não houve aplicação de migration nem tentativa de contornar a rejeição.
+
+A ação pendente concreta é aplicar apenas o SQL de `20261107040000_validate_module_quiz_answer.sql`, em transação, no projeto `whwsigttmlailsutntey`, seguido de recarga do schema PostgREST. Ela cria o RPC novo e concede execução a `authenticated`; não remove o RPC legado ou políticas existentes. Após aprovação, a verificação hospedada deve usar `p_selected_index=1,p_finalize=false` sob a role `authenticated`, com claims da conta autorizada e `ROLLBACK`, além de negar execução anônima. Isso valida RPC/ACL real sem criar XP; não equivale a login de usuário autenticado via navegador.
